@@ -1,67 +1,60 @@
 from flask import Blueprint, request, jsonify
 from services.call_service import (
     get_available_volunteers,
-    match_volunteer,
     register_volunteer,
-    set_volunteer_availability,
     unregister_volunteer,
+    get_queue_position
 )
+from utils.validators import validate_session_id
 
 call_bp = Blueprint("call", __name__, url_prefix="/api/call")
 
 
+@call_bp.route("/volunteers/available", methods=["GET"])
+def available_volunteers():
+    volunteers = get_available_volunteers()
+    return jsonify({
+        "available": len(volunteers),
+        "online":    volunteers
+    }), 200
+
+
+@call_bp.route("/queue/join", methods=["POST"])
+def join_queue():
+    data       = request.get_json()
+    session_id = data.get("session_id", "").strip()
+
+    if not validate_session_id(session_id):
+        return jsonify({"error": "Invalid session_id"}), 400
+
+    position = get_queue_position(session_id)
+    return jsonify({
+        "session_id":     session_id,
+        "queue_position": position,
+        "message":        "You are in the queue. A volunteer will connect shortly."
+    }), 200
+
+
 @call_bp.route("/volunteer/register", methods=["POST"])
-def register():
-    data = request.get_json() or {}
+def volunteer_register():
+    data         = request.get_json()
     volunteer_id = data.get("volunteer_id", "").strip()
-    available = data.get("available", True)
+    name         = data.get("name", "Anonymous Volunteer").strip()
 
     if not volunteer_id:
         return jsonify({"error": "volunteer_id is required"}), 400
 
-    volunteer = register_volunteer(volunteer_id, available)
-    return jsonify({"volunteer": volunteer}), 201
+    register_volunteer(volunteer_id, name)
+    return jsonify({"message": f"{name} is now online"}), 200
 
 
 @call_bp.route("/volunteer/unregister", methods=["POST"])
-def unregister():
-    data = request.get_json() or {}
+def volunteer_unregister():
+    data         = request.get_json()
     volunteer_id = data.get("volunteer_id", "").strip()
 
     if not volunteer_id:
         return jsonify({"error": "volunteer_id is required"}), 400
 
-    if not unregister_volunteer(volunteer_id):
-        return jsonify({"error": "Volunteer not found"}), 404
-
-    return jsonify({"message": "Volunteer unregistered"}), 200
-
-
-@call_bp.route("/volunteer/<volunteer_id>/availability", methods=["PATCH"])
-def update_availability(volunteer_id):
-    data = request.get_json() or {}
-    available = data.get("available")
-
-    if available is None:
-        return jsonify({"error": "available field is required"}), 400
-
-    volunteer = set_volunteer_availability(volunteer_id, available)
-    if volunteer is None:
-        return jsonify({"error": "Volunteer not found"}), 404
-
-    return jsonify({"volunteer": volunteer}), 200
-
-
-@call_bp.route("/match", methods=["GET"])
-def match_call():
-    volunteer = match_volunteer()
-    if not volunteer:
-        return jsonify({"error": "No available volunteers"}), 404
-
-    return jsonify({"volunteer": volunteer}), 200
-
-
-@call_bp.route("/volunteers", methods=["GET"])
-def list_volunteers():
-    volunteers = get_available_volunteers()
-    return jsonify({"available_volunteers": volunteers}), 200
+    unregister_volunteer(volunteer_id)
+    return jsonify({"message": "Volunteer is now offline"}), 200
