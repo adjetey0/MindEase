@@ -19,10 +19,12 @@ def create_app(env: str = "default") -> Flask:
     from routes.chat   import chat_bp
     from routes.mood   import mood_bp
     from routes.report import report_bp
+    from routes.call import call_bp
 
     app.register_blueprint(chat_bp)
     app.register_blueprint(mood_bp)
     app.register_blueprint(report_bp)
+    app.register_blueprint(call_bp)
 
     # Create DB Tables
     with app.app_context():
