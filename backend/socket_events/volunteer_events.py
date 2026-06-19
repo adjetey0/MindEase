@@ -1,39 +1,51 @@
-try:
-    from flask_socketio import emit
-except ImportError:  # pragma: no cover
-    emit = None
+from flask_socketio import SocketIO, emit, join_room, leave_room
+from services.call_service import (
+    register_volunteer,
+    unregister_volunteer,
+    set_volunteer_busy,
+    get_next_in_queue,
+    remove_from_queue
+)
 
-from services.call_service import register_volunteer, set_volunteer_availability, unregister_volunteer
+def register_volunteer_events(socketio: SocketIO):
 
-
-def register_volunteer_events(socketio):
-    """Register volunteer presence events with a Socket.IO server."""
-
-    @socketio.on("volunteer-online")
+    @socketio.on("volunteer_online")
     def handle_volunteer_online(data):
         volunteer_id = data.get("volunteer_id")
-        if not volunteer_id:
-            return
+        name         = data.get("name", "Volunteer")
 
-        volunteer = register_volunteer(volunteer_id, available=True)
-        emit("volunteer-status", {"volunteer": volunteer, "status": "online"}, broadcast=True)
+        register_volunteer(volunteer_id, name)
+        join_room(volunteer_id)
 
-    @socketio.on("volunteer-offline")
+        next_user = get_next_in_queue()
+        if next_user:
+            emit("user_waiting", {
+                "session_id": next_user,
+                "message":    "A user is waiting to talk. Connect when ready."
+            }, room=volunteer_id)
+        else:
+            emit("no_users_waiting", {
+                "message": "You are online. No users waiting right now."
+            }, room=volunteer_id)
+
+
+    @socketio.on("volunteer_offline")
     def handle_volunteer_offline(data):
         volunteer_id = data.get("volunteer_id")
-        if not volunteer_id:
-            return
-
         unregister_volunteer(volunteer_id)
-        emit("volunteer-status", {"volunteer_id": volunteer_id, "status": "offline"}, broadcast=True)
+        leave_room(volunteer_id)
+        emit("volunteer_status", {"status": "offline"}, room=volunteer_id)
 
-    @socketio.on("volunteer-availability")
-    def handle_volunteer_availability(data):
+
+    @socketio.on("volunteer_accept_call")
+    def handle_volunteer_accept(data):
         volunteer_id = data.get("volunteer_id")
-        available = data.get("available")
-        if not volunteer_id or available is None:
-            return
+        session_id   = data.get("session_id")
 
-        volunteer = set_volunteer_availability(volunteer_id, available)
-        if volunteer:
-            emit("volunteer-status", {"volunteer": volunteer}, broadcast=True)
+        set_volunteer_busy(volunteer_id, True)
+        remove_from_queue(session_id)
+
+        emit("call_accepted", {
+            "volunteer_id": volunteer_id,
+            "message":      "A volunteer has accepted your call. Connecting now..."
+        }, room=session_id)
