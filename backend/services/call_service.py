@@ -1,44 +1,50 @@
-from datetime import datetime
-from typing import Dict, List, Optional
+# In-memory store — resets on server restart, private by design
 
-# Simple in-memory volunteer availability registry.
-# Replace with database-backed persistence when the model is available.
-volunteer_registry: Dict[str, Dict[str, object]] = {}
+_available_volunteers = {}   # { volunteer_id: { name, busy } }
+_user_queue           = []   # [ session_id, ... ] in order of joining
 
 
-def register_volunteer(volunteer_id: str, available: bool = True) -> Dict[str, object]:
-    """Register or update a volunteer's availability state."""
-    volunteer_registry[volunteer_id] = {
-        "volunteer_id": volunteer_id,
-        "available": bool(available),
-        "last_seen": datetime.utcnow().isoformat() + "Z",
+def get_available_volunteers() -> list:
+    """Return list of volunteers who are online and not busy."""
+    return [
+        {"volunteer_id": vid, "name": v["name"]}
+        for vid, v in _available_volunteers.items()
+        if not v["busy"]
+    ]
+
+
+def register_volunteer(volunteer_id: str, name: str):
+    """Mark a volunteer as online and available."""
+    _available_volunteers[volunteer_id] = {
+        "name": name,
+        "busy": False
     }
-    return volunteer_registry[volunteer_id]
 
 
-def unregister_volunteer(volunteer_id: str) -> bool:
-    """Remove a volunteer from the availability registry."""
-    return volunteer_registry.pop(volunteer_id, None) is not None
+def unregister_volunteer(volunteer_id: str):
+    """Remove a volunteer from the available pool."""
+    _available_volunteers.pop(volunteer_id, None)
 
 
-def set_volunteer_availability(volunteer_id: str, available: bool) -> Optional[Dict[str, object]]:
-    """Update volunteer availability."""
-    volunteer = volunteer_registry.get(volunteer_id)
-    if not volunteer:
-        return None
-    volunteer["available"] = bool(available)
-    volunteer["last_seen"] = datetime.utcnow().isoformat() + "Z"
-    return volunteer
+def set_volunteer_busy(volunteer_id: str, busy: bool):
+    """Mark a volunteer as busy or free."""
+    if volunteer_id in _available_volunteers:
+        _available_volunteers[volunteer_id]["busy"] = busy
 
 
-def get_available_volunteers() -> List[Dict[str, object]]:
-    """Return volunteers that are currently available to accept a call."""
-    return [v for v in volunteer_registry.values() if v.get("available")]
+def get_queue_position(session_id: str) -> int:
+    """Add user to queue if not already in it, return their position."""
+    if session_id not in _user_queue:
+        _user_queue.append(session_id)
+    return _user_queue.index(session_id) + 1
 
 
-def match_volunteer() -> Optional[Dict[str, object]]:
-    """Return the next available volunteer for a call."""
-    available = get_available_volunteers()
-    if not available:
-        return None
-    return available[0]
+def remove_from_queue(session_id: str):
+    """Remove user from queue after they connect."""
+    if session_id in _user_queue:
+        _user_queue.remove(session_id)
+
+
+def get_next_in_queue() -> str | None:
+    """Get the next user waiting in queue."""
+    return _user_queue[0] if _user_queue else None
