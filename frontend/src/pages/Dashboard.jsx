@@ -6,7 +6,7 @@ import { useData } from '../context/DataContext';
 
 function Dashboard() {
   const { toggleMobileMenu } = useLayout();
-  const { profile, programs, moodLogs, logMood } = useData();
+  const { profile, programs, moodLogs, logMood, assessmentProfile, hasCompletedAssessment } = useData();
   const navigate = useNavigate();
 
   const [selectedMood, setSelectedMood] = useState(null);
@@ -58,6 +58,14 @@ function Dashboard() {
           </div>
         </div>
         <div className="flex items-center gap-3">
+          <button
+            onClick={() => navigate('/assessment?retake=true')}
+            title="Retake Assessment"
+            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold border border-primary/20 hover:bg-primary/20 transition"
+          >
+            <span className="material-symbols-outlined text-sm">psychology</span>
+            <span>Retake Assessment</span>
+          </button>
           <div className="hidden sm:flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-amber-500/10 text-amber-600 font-semibold text-xs border border-amber-500/20">
             <span className="material-symbols-outlined text-base">local_fire_department</span>
             <span>{profile.streak} Day Streak</span>
@@ -71,6 +79,55 @@ function Dashboard() {
       {/* Page Scrollable Area */}
       <div className="flex-1 overflow-y-auto min-h-0 flex flex-col">
         <div className="max-w-[1200px] w-full mx-auto p-margin-mobile md:p-lg space-y-md flex-grow">
+
+          {/* ── Assessment Personalization Banner ─────────────────── */}
+          {hasCompletedAssessment && assessmentProfile ? (
+            <div className="bg-gradient-to-r from-primary/10 via-secondary-container/30 to-primary/5 rounded-[2rem] p-5 sm:p-6 border border-primary/20 card-shadow flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-2xl bg-primary/15 text-primary flex items-center justify-center shrink-0">
+                  <span className="material-symbols-outlined text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>psychology</span>
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-primary uppercase tracking-wider mb-0.5">Personalized for You</p>
+                  <h3 className="font-bold text-on-surface text-base">
+                    Goal: {assessmentProfile.primaryGoalTitle}
+                  </h3>
+                  <p className="text-on-surface-variant text-xs mt-0.5">
+                    Feeling <span className="font-semibold text-on-surface">{assessmentProfile.emotionalStateTitle?.toLowerCase()}</span>
+                    {assessmentProfile.supportPreferenceTitle && (
+                      <> · Prefers <span className="font-semibold text-on-surface">{assessmentProfile.supportPreferenceTitle}</span></>
+                    )}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => navigate('/assessment?retake=true')}
+                className="shrink-0 text-xs font-bold text-primary border border-primary/30 px-4 py-2 rounded-full hover:bg-primary/10 transition flex items-center gap-1.5"
+              >
+                <span className="material-symbols-outlined text-sm">refresh</span>
+                Update Profile
+              </button>
+            </div>
+          ) : (
+            <div className="bg-surface-container-lowest rounded-[2rem] p-5 sm:p-6 border border-outline-variant/20 card-shadow flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-2xl bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0">
+                  <span className="material-symbols-outlined text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>quiz</span>
+                </div>
+                <div>
+                  <h3 className="font-bold text-on-surface text-base">Personalize Your Experience</h3>
+                  <p className="text-on-surface-variant text-xs mt-0.5">Take a quick 4-question assessment so we can tailor your dashboard and AI companion.</p>
+                </div>
+              </div>
+              <button
+                onClick={() => navigate('/assessment')}
+                className="shrink-0 bg-primary text-white text-xs font-bold px-5 py-2.5 rounded-full hover:opacity-90 transition shadow-sm flex items-center gap-1.5"
+              >
+                <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                Take Assessment
+              </button>
+            </div>
+          )}
 
           {/* Daily Quick Mood Check-in */}
           <div className="bg-surface-container-lowest rounded-[2rem] p-md border border-outline-variant/10 card-shadow">

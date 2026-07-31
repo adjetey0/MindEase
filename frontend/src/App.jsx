@@ -23,6 +23,7 @@ function App() {
       <Route path="/learn-more" element={<LearnMore />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
+      <Route path="/assessment" element={<Assessment />} />
       <Route element={<Layout />}>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/chat" element={<Chat />} />
@@ -33,7 +34,6 @@ function App() {
         <Route path="/emergency" element={<EmergencySupport />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/help" element={<Help />} />
-        <Route path="/assessment" element={<Assessment />} />
       </Route>
     </Routes>
   );

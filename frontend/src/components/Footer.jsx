@@ -6,7 +6,7 @@ const Footer = () => {
   return (
     <footer className="bg-surface-container-low border-t border-outline-variant/20 mt-20 transition-colors">
       {/* Top Section */}
-      <div className="max-w-7xl mx-auto px-8 py-5 grid grid-cols-1 md:grid-cols-3 gap-16">
+      <div className="max-w-7xl mx-auto px-8 py-3 grid grid-cols-1 md:grid-cols-3 gap-16">
         {/* Left */}
         <div>
           <h2 className="text-2xl font-bold text-on-surface mb-5">
@@ -111,7 +111,7 @@ const Footer = () => {
 
       {/* Bottom Bar */}
       <div className="border-t border-outline-variant/20">
-        <div className="max-w-7xl mx-auto px-8 py-3 flex flex-col md:flex-row justify-between items-center gap-6">
+        <div className="max-w-7xl mx-auto px-8 py-2 flex flex-col md:flex-row justify-between items-center gap-6">
           <p className="text-on-surface-variant text-base">
             © 2026 MindEase. Professional care for a modern world.
           </p>

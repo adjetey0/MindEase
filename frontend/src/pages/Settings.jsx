@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useLayout } from '../components/Layout';
 import { useTheme } from '../context/ThemeContext';
 import { useData } from '../context/DataContext';
@@ -8,6 +8,7 @@ function Settings() {
   const { toggleMobileMenu } = useLayout();
   const { darkMode, setDarkMode } = useTheme();
   const { profile, updateProfile, settings, updateSettings, resetAllData } = useData();
+  const navigate = useNavigate();
 
   const [fullName, setFullName] = useState(profile.name);
   const [email, setEmail] = useState(profile.email);
@@ -189,6 +190,17 @@ function Settings() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <button
+                  onClick={() => navigate('/assessment?retake=true')}
+                  className="p-4 bg-primary/5 border border-primary/20 rounded-2xl flex items-center justify-between hover:bg-primary/10 transition text-left"
+                >
+                  <div>
+                    <p className="font-bold text-xs text-primary">Retake Wellness Assessment</p>
+                    <p className="text-[10px] text-on-surface-variant">Update your personalization profile</p>
+                  </div>
+                  <span className="material-symbols-outlined text-primary text-xl">psychology</span>
+                </button>
+
                 <button
                   onClick={handleExportData}
                   className="p-4 bg-surface-container-low rounded-2xl border border-outline-variant/20 flex items-center justify-between hover:bg-surface-container-high transition text-left"

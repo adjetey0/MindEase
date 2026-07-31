@@ -5,7 +5,7 @@ import { useData } from '../context/DataContext';
 
 function Chat() {
   const { toggleMobileMenu } = useLayout();
-  const { chatMessages, sendChatMessage, profile, moodLogs, logMood } = useData();
+  const { chatMessages, sendChatMessage, profile, moodLogs, logMood, assessmentProfile } = useData();
 
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
@@ -168,6 +168,32 @@ function Chat() {
       <div className="flex-1 overflow-y-auto py-lg px-margin-mobile md:px-0 custom-scrollbar">
         <div className="max-w-[1100px] mx-auto space-y-md p-5">
           
+          {/* Assessment-Based Personalization Context Banner */}
+          {assessmentProfile && chatMessages.length <= 1 && (
+            <div className="flex gap-4 items-start">
+              <div className="w-10 h-10 rounded-full bg-primary-container flex-shrink-0 flex items-center justify-center shadow-sm">
+                <span className="material-symbols-outlined text-on-primary-container text-md" style={{ fontVariationSettings: "'FILL' 1" }}>spa</span>
+              </div>
+              <div className="max-w-[85%] bg-gradient-to-br from-primary/8 via-surface-container-lowest to-primary/5 border border-primary/20 p-4 rounded-[1.25rem] rounded-bl-[4px] shadow-sm space-y-2">
+                <p className="text-on-surface leading-relaxed text-sm">
+                  I can see you're working on <strong>{assessmentProfile.primaryGoalTitle?.toLowerCase()}</strong>.
+                  {assessmentProfile.emotionalStateTitle && (
+                    <> You mentioned feeling <strong>{assessmentProfile.emotionalStateTitle?.toLowerCase()}</strong> recently — that's completely okay.</>
+                  )}
+                  {assessmentProfile.supportPreferenceTitle && (
+                    <> I'll tailor our conversations around <strong>{assessmentProfile.supportPreferenceTitle?.toLowerCase()}</strong>, just as you preferred.
+                    </>
+                  )}
+                  {' '}What's on your mind today?
+                </p>
+                <span className="text-[10px] text-primary font-semibold flex items-center gap-1">
+                  <span className="material-symbols-outlined text-xs">auto_awesome</span>
+                  Personalized from your assessment
+                </span>
+              </div>
+            </div>
+          )}
+
           {/* Daily Quick Mood Check-in Pill */}
           {!moodSelected && (
             <section className="glass-panel rounded-3xl p-md mb-lg shadow-sm">

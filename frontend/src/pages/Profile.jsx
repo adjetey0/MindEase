@@ -224,17 +224,26 @@ function Profile() {
           {/* Sign Out */}
           <section className="bg-surface-container-lowest p-6 rounded-[2rem] border border-outline-variant/20 shadow-sm space-y-4">
             <h3 className="font-headline-md text-base font-bold text-on-surface">Account</h3>
-            <p className="text-xs text-on-surface-variant">Sign out of your account on this device. Your streak and data will be cleared.</p>
-            <button
-              onClick={() => {
-                resetAllData();
-                navigate('/');
-              }}
-              className="flex items-center gap-2 px-6 py-3 rounded-full bg-error/10 text-error font-bold text-xs border border-error/20 hover:bg-error hover:text-white transition-all active:scale-95"
-            >
-              <span className="material-symbols-outlined text-base">logout</span>
-              <span>Sign Out</span>
-            </button>
+            <p className="text-xs text-on-surface-variant">Manage your account settings and wellness profile.</p>
+            <div className="flex flex-wrap gap-3">
+              <button
+                onClick={() => navigate('/assessment?retake=true')}
+                className="flex items-center gap-2 px-6 py-3 rounded-full bg-primary/10 text-primary font-bold text-xs border border-primary/20 hover:bg-primary/20 transition-all active:scale-95"
+              >
+                <span className="material-symbols-outlined text-base">psychology</span>
+                <span>Retake Assessment</span>
+              </button>
+              <button
+                onClick={() => {
+                  resetAllData();
+                  navigate('/');
+                }}
+                className="flex items-center gap-2 px-6 py-3 rounded-full bg-error/10 text-error font-bold text-xs border border-error/20 hover:bg-error hover:text-white transition-all active:scale-95"
+              >
+                <span className="material-symbols-outlined text-base">logout</span>
+                <span>Sign Out</span>
+              </button>
+            </div>
           </section>
 
         </main>

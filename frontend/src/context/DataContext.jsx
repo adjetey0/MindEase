@@ -4,6 +4,8 @@ const STORAGE_KEY = 'mindease_app_data_v1';
 
 const initialDefaultData = {
   isLoggedIn: true,
+  hasCompletedAssessment: false,
+  assessmentProfile: null,
   profile: {
     name: 'Alex Morgan',
     email: 'alex.morgan@example.com',
@@ -557,8 +559,52 @@ export function DataProvider({ children }) {
   };
 
   const resetAllData = () => {
-    setData({ ...initialDefaultData, isLoggedIn: false });
+    const loggedOutState = {
+      ...initialDefaultData,
+      isLoggedIn: false,
+      hasCompletedAssessment: false,
+      assessmentProfile: null,
+      profile: {
+        ...initialDefaultData.profile,
+        name: '',
+        email: '',
+        avatar: '',
+        bio: '',
+      },
+    };
+    setData(loggedOutState);
     localStorage.removeItem(STORAGE_KEY);
+  };
+
+  const completeAssessment = (answers, result) => {
+    // answers = { 0: opt, 1: opt, 2: opt, 3: opt } keyed by step index
+    const profileData = {
+      primaryGoal: answers[0]?.id || null,
+      primaryGoalTitle: answers[0]?.title || null,
+      emotionalState: answers[1]?.id || null,
+      emotionalStateTitle: answers[1]?.title || null,
+      sleepQuality: answers[2]?.id || null,
+      sleepQualityTitle: answers[2]?.title || null,
+      supportPreference: answers[3]?.id || null,
+      supportPreferenceTitle: answers[3]?.title || null,
+      completedAt: new Date().toISOString(),
+    };
+    setData((prev) => ({
+      ...prev,
+      hasCompletedAssessment: true,
+      assessmentProfile: profileData,
+      profile: {
+        ...prev.profile,
+        assessmentHistory: [
+          {
+            id: `asm-${Date.now()}`,
+            date: new Date().toISOString().split('T')[0],
+            ...result,
+          },
+          ...(prev.profile.assessmentHistory || []),
+        ],
+      },
+    }));
   };
 
   const signIn = () => {
@@ -571,6 +617,7 @@ export function DataProvider({ children }) {
         ...data,
         updateProfile,
         addAssessmentResult,
+        completeAssessment,
         toggleEnrollProgram,
         toggleModuleCompletion,
         createCommunityPost,

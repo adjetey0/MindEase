@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useLayout } from '../components/Layout';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useData } from '../context/DataContext';
-import Footer from '../components/Footer';
 
 const stepsData = [
   {
     step: 1,
     category: 'Primary Focus',
     icon: 'target',
-    question: 'What is your primary goal for using MindEase today?',
+    question: 'What is your primary goal for using MindEase?',
     subtitle: 'Select the main area where you would like to experience progress.',
     options: [
       { id: 'reduce-stress', title: 'Reduce Stress & Overwhelm', desc: 'Learn grounding tools to ease daily workplace and personal pressure.', icon: 'spa', points: 3 },
@@ -60,9 +58,10 @@ const stepsData = [
 ];
 
 function Assessment() {
-  const { toggleMobileMenu } = useLayout();
-  const { addAssessmentResult } = useData();
+  const { completeAssessment } = useData();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const isRetake = searchParams.get('retake') === 'true';
 
   const [currentStep, setCurrentStep] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState({});
@@ -72,17 +71,13 @@ function Assessment() {
   const currentStepData = stepsData[currentStep];
 
   const handleSelectOption = (opt) => {
-    setSelectedAnswers((prev) => ({
-      ...prev,
-      [currentStep]: opt,
-    }));
+    setSelectedAnswers((prev) => ({ ...prev, [currentStep]: opt }));
   };
 
   const handleNext = () => {
     if (currentStep < stepsData.length - 1) {
       setCurrentStep((prev) => prev + 1);
     } else {
-      // Calculate final score
       let totalPoints = 0;
       Object.values(selectedAnswers).forEach((ans) => {
         if (ans && ans.points) totalPoints += ans.points;
@@ -99,16 +94,14 @@ function Assessment() {
       }
 
       const resultObj = { score: totalPoints, level, recommendation: rec };
-      addAssessmentResult(resultObj);
+      completeAssessment(selectedAnswers, resultObj);
       setFinalScoreResult(resultObj);
       setIsCompleted(true);
     }
   };
 
   const handleBack = () => {
-    if (currentStep > 0) {
-      setCurrentStep((prev) => prev - 1);
-    }
+    if (currentStep > 0) setCurrentStep((prev) => prev - 1);
   };
 
   const handleRestart = () => {
@@ -119,41 +112,44 @@ function Assessment() {
   };
 
   return (
-    <div className="flex-1 flex flex-col min-h-0 overflow-hidden bg-background text-on-background">
-      {/* Top App Header */}
-      <header className="sticky top-0 w-full z-40 bg-surface/80 backdrop-blur-xl border-b border-outline-variant/30 h-20 flex justify-between items-center px-margin-mobile md:px-margin-desktop shrink-0">
-        <div className="flex items-center gap-3">
-          <button onClick={toggleMobileMenu} className="md:hidden text-primary p-2">
-            <span className="material-symbols-outlined">menu</span>
-          </button>
-          <Link to="/" className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-primary text-2xl fill-icon">spa</span>
-            <span className="font-headline-md text-headline-md font-bold text-primary">MindEase</span>
-          </Link>
-        </div>
+    <div className="min-h-screen bg-background text-on-background flex flex-col">
+      {/* Standalone Navbar */}
+      <header className="w-full sticky top-0 z-50 bg-surface/80 backdrop-blur-xl border-b border-outline-variant/20 h-16 flex items-center justify-between px-6 md:px-12 shrink-0">
+        <Link to="/" className="flex items-center gap-2">
+          <span className="material-symbols-outlined text-primary text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>spa</span>
+          <span className="font-bold text-xl text-primary tracking-tight">MindEase</span>
+        </Link>
 
         <div className="flex items-center gap-4">
-          <Link to="/chat" className="text-sm font-semibold text-primary hover:underline flex items-center gap-1">
-            <span className="material-symbols-outlined text-base">arrow_back</span>
-            <span className="hidden sm:inline">Back to Chat</span>
-          </Link>
+          {!isCompleted && (
+            <span className="hidden sm:block text-xs font-semibold text-on-surface-variant bg-surface-container px-3 py-1 rounded-full border border-outline-variant/20">
+              {isRetake ? 'Retaking Assessment' : 'Personalizing your experience'}
+            </span>
+          )}
+          <button
+            onClick={() => navigate('/dashboard')}
+            className="text-sm text-on-surface-variant hover:text-primary font-medium transition-colors flex items-center gap-1"
+          >
+            <span className="hidden sm:inline">Skip for now</span>
+            <span className="material-symbols-outlined text-base">close</span>
+          </button>
         </div>
       </header>
 
-      {/* Main Content Scrollable Viewport */}
-      <div className="flex-1 overflow-y-auto min-h-0 flex flex-col custom-scrollbar relative">
-        <div className="max-w-[1280px] w-full mx-auto px-margin-mobile md:px-margin-desktop py-8 sm:py-12 flex-grow">
+      {/* Main Content */}
+      <main className="flex-1 flex flex-col items-center justify-start py-10 px-4">
+        <div className="w-full max-w-2xl mx-auto">
 
           {!isCompleted ? (
             <>
-              {/* Progress Bar Header */}
-              <div className="max-w-[720px] mx-auto mb-8 sm:mb-12 space-y-3">
+              {/* Progress Header */}
+              <div className="mb-8 space-y-3">
                 <div className="flex justify-between items-center">
-                  <span className="text-label-md font-bold text-primary flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                  <span className="text-sm font-bold text-primary flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-primary animate-pulse inline-block" />
                     Step {currentStep + 1} of {stepsData.length}
                   </span>
-                  <span className="text-label-md font-bold text-on-surface-variant uppercase tracking-wider text-xs">
+                  <span className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">
                     {currentStepData.category}
                   </span>
                 </div>
@@ -165,139 +161,142 @@ function Assessment() {
                 </div>
               </div>
 
-              {/* Assessment Question Card */}
-              <div className="flex flex-col lg:flex-row gap-8 items-start justify-center">
-                <div className="w-full lg:max-w-[720px] glass-panel rounded-[2rem] p-6 sm:p-10 card-shadow border border-outline-variant/30 space-y-8">
-                  <div className="text-center md:text-left space-y-3">
-                    <span className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-secondary-container text-on-secondary-container shadow-sm">
-                      <span className="material-symbols-outlined text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>
-                        {currentStepData.icon}
-                      </span>
+              {/* Question Card */}
+              <div className="bg-surface-container-lowest rounded-[2rem] p-6 sm:p-10 border border-outline-variant/20 shadow-lg space-y-8">
+                <div className="space-y-3">
+                  <span className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-secondary-container text-on-secondary-container shadow-sm">
+                    <span className="material-symbols-outlined text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>
+                      {currentStepData.icon}
                     </span>
-                    <h1 className="font-headline-lg text-2xl sm:text-[30px] font-bold text-on-surface leading-snug">
-                      {currentStepData.question}
-                    </h1>
-                    <p className="font-body-md text-on-surface-variant text-sm sm:text-base leading-relaxed">
-                      {currentStepData.subtitle}
-                    </p>
-                  </div>
+                  </span>
+                  <h1 className="text-2xl sm:text-3xl font-bold text-on-surface leading-snug">
+                    {currentStepData.question}
+                  </h1>
+                  <p className="text-on-surface-variant text-sm leading-relaxed">
+                    {currentStepData.subtitle}
+                  </p>
+                </div>
 
-                  {/* Options List */}
-                  <div className="grid grid-cols-1 gap-3 sm:gap-4">
-                    {currentStepData.options.map((opt) => {
-                      const isSelected = selectedAnswers[currentStep]?.id === opt.id;
-                      return (
-                        <button
-                          key={opt.id}
-                          onClick={() => handleSelectOption(opt)}
-                          className={`group flex items-center p-4 sm:p-5 rounded-2xl border-2 transition-all text-left active:scale-[0.99] ${
-                            isSelected
-                              ? 'border-primary bg-primary-container/10 shadow-md'
-                              : 'border-outline-variant/30 bg-surface-container-lowest hover:border-primary/50 hover:bg-surface-container-low'
+                {/* Options */}
+                <div className="grid grid-cols-1 gap-3">
+                  {currentStepData.options.map((opt) => {
+                    const isSelected = selectedAnswers[currentStep]?.id === opt.id;
+                    return (
+                      <button
+                        key={opt.id}
+                        onClick={() => handleSelectOption(opt)}
+                        className={`group flex items-center p-4 sm:p-5 rounded-2xl border-2 transition-all text-left active:scale-[0.99] ${isSelected
+                            ? 'border-primary bg-primary/5 shadow-md'
+                            : 'border-outline-variant/30 bg-surface-container-lowest hover:border-primary/50 hover:bg-surface-container-low'
                           }`}
+                      >
+                        <div
+                          className={`w-12 h-12 rounded-xl flex items-center justify-center mr-4 shrink-0 transition-colors ${isSelected
+                              ? 'bg-primary text-white shadow-sm'
+                              : 'bg-surface-container text-primary group-hover:bg-primary/10'
+                            }`}
                         >
-                          <div
-                            className={`w-12 h-12 rounded-xl flex items-center justify-center mr-4 shrink-0 transition-colors ${
-                              isSelected
-                                ? 'bg-primary text-white shadow-sm'
-                                : 'bg-surface-container text-primary group-hover:bg-primary-container group-hover:text-white'
+                          <span className="material-symbols-outlined text-xl">{opt.icon}</span>
+                        </div>
+                        <div className="flex-grow pr-2">
+                          <p className="font-bold text-on-surface text-base">{opt.title}</p>
+                          <p className="text-on-surface-variant text-xs mt-0.5">{opt.desc}</p>
+                        </div>
+                        <div
+                          className={`w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${isSelected ? 'border-primary bg-primary' : 'border-outline-variant'
                             }`}
-                          >
-                            <span className="material-symbols-outlined text-xl">{opt.icon}</span>
-                          </div>
+                        >
+                          <div className={`w-2.5 h-2.5 rounded-full bg-white transition-opacity ${isSelected ? 'opacity-100' : 'opacity-0'}`} />
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
 
-                          <div className="flex-grow pr-2">
-                            <p className="font-body-lg text-on-surface font-bold text-base sm:text-lg">
-                              {opt.title}
-                            </p>
-                            <p className="text-label-md text-on-surface-variant text-xs sm:text-sm mt-0.5">
-                              {opt.desc}
-                            </p>
-                          </div>
-
-                          <div
-                            className={`w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${
-                              isSelected ? 'border-primary bg-primary' : 'border-outline-variant'
-                            }`}
-                          >
-                            <div className={`w-2.5 h-2.5 rounded-full bg-white transition-opacity ${isSelected ? 'opacity-100' : 'opacity-0'}`} />
-                          </div>
-                        </button>
-                      );
-                    })}
-                  </div>
-
-                  {/* Action Controls */}
-                  <div className="flex items-center justify-between pt-6 border-t border-outline-variant/20">
-                    <button
-                      onClick={handleBack}
-                      disabled={currentStep === 0}
-                      className="flex items-center gap-2 text-primary font-bold text-sm hover:underline disabled:opacity-30 transition-all"
-                    >
-                      <span className="material-symbols-outlined text-lg">arrow_back</span>
-                      <span>Back</span>
-                    </button>
-
-                    <button
-                      onClick={handleNext}
-                      disabled={!selectedAnswers[currentStep]}
-                      className="bg-primary text-white rounded-full px-8 sm:px-10 py-3 font-bold text-sm sm:text-base shadow-lg hover:shadow-xl disabled:opacity-40 transition-all flex items-center gap-2"
-                    >
-                      <span>{currentStep === stepsData.length - 1 ? 'Complete & Save' : 'Next'}</span>
-                      <span className="material-symbols-outlined text-base">arrow_forward</span>
-                    </button>
-                  </div>
+                {/* Navigation */}
+                <div className="flex items-center justify-between pt-4 border-t border-outline-variant/20">
+                  <button
+                    onClick={handleBack}
+                    disabled={currentStep === 0}
+                    className="flex items-center gap-2 text-primary font-bold text-sm hover:underline disabled:opacity-30 transition-all"
+                  >
+                    <span className="material-symbols-outlined text-lg">arrow_back</span>
+                    <span>Back</span>
+                  </button>
+                  <button
+                    onClick={handleNext}
+                    disabled={!selectedAnswers[currentStep]}
+                    className="bg-primary text-white rounded-full px-8 sm:px-10 py-3 font-bold text-sm sm:text-base shadow-lg hover:shadow-xl disabled:opacity-40 transition-all flex items-center gap-2"
+                  >
+                    <span>{currentStep === stepsData.length - 1 ? 'Complete & Save' : 'Next'}</span>
+                    <span className="material-symbols-outlined text-base">arrow_forward</span>
+                  </button>
                 </div>
               </div>
             </>
           ) : (
             /* Results Screen */
-            <div className="max-w-[840px] mx-auto glass-panel rounded-[2.5rem] p-8 md:p-14 shadow-2xl border border-outline-variant/30 text-center space-y-8">
+            <div className="bg-surface-container-lowest rounded-[2.5rem] p-8 md:p-14 shadow-2xl border border-outline-variant/20 text-center space-y-8 animate-fade-in">
+              {/* Success Icon */}
               <div className="w-20 h-20 rounded-full bg-emerald-500/10 text-emerald-600 flex items-center justify-center mx-auto shadow-lg">
                 <span className="material-symbols-outlined text-4xl" style={{ fontVariationSettings: "'FILL' 1" }}>
                   task_alt
                 </span>
               </div>
 
-              <div className="space-y-3 max-w-xl mx-auto">
-                <span className="px-4 py-1.5 bg-emerald-500/10 text-emerald-600 rounded-full text-xs font-bold uppercase tracking-wider border border-emerald-500/20">
-                  Assessment Saved to Profile
+              <div className="space-y-3 max-w-full mx-auto">
+                <span className="px-4 py-1.5 bg-emerald-500/10 text-emerald-600 rounded-full text-xs font-bold uppercase tracking-wider border border-emerald-500/20 inline-block">
+                  {isRetake ? 'Profile Updated' : 'Profile Created'}
                 </span>
-                <h1 className="font-headline-xl text-3xl md:text-4xl font-bold text-on-surface">
+                <h1 className="text-3xl md:text-4xl font-bold text-on-surface">
                   {finalScoreResult?.level}
                 </h1>
                 <p className="text-on-surface-variant text-sm leading-relaxed">
-                  Recommendation: {finalScoreResult?.recommendation}
+                  {finalScoreResult?.recommendation}
                 </p>
               </div>
 
+              {/* Summary Pills */}
+              {Object.keys(selectedAnswers).length > 0 && (
+                <div className="flex flex-wrap justify-center gap-2">
+                  {Object.values(selectedAnswers).map((ans, i) => (
+                    <span
+                      key={i}
+                      className="px-3 py-1.5 bg-primary/10 text-primary rounded-full text-xs font-semibold border border-primary/20"
+                    >
+                      {ans.title}
+                    </span>
+                  ))}
+                </div>
+              )}
+
               <div className="flex flex-col sm:flex-row justify-center gap-4 pt-4">
                 <button
-                  onClick={() => navigate('/chat')}
+                  onClick={() => navigate('/dashboard')}
                   className="bg-primary text-white font-bold px-8 py-3.5 rounded-full shadow-lg hover:opacity-90 transition text-sm flex items-center justify-center gap-2"
                 >
-                  <span>Start Guided AI Chat</span>
+                  <span>Go to My Dashboard</span>
                   <span className="material-symbols-outlined text-base">arrow_forward</span>
                 </button>
                 <button
-                  onClick={() => navigate('/profile')}
-                  className="border border-primary/30 text-primary font-bold px-8 py-3.5 rounded-full hover:bg-primary/5 transition text-sm flex items-center justify-center"
+                  onClick={() => navigate('/chat')}
+                  className="border border-primary/30 text-primary font-bold px-8 py-3.5 rounded-full hover:bg-primary/5 transition text-sm flex items-center justify-center gap-2"
                 >
-                  View Profile History
-                </button>
-                <button
-                  onClick={handleRestart}
-                  className="text-on-surface-variant hover:text-primary font-semibold text-xs py-3 px-4 transition"
-                >
-                  Retake Assessment
+                  <span className="material-symbols-outlined text-base">forum</span>
+                  <span>Start AI Chat</span>
                 </button>
               </div>
+
+              <button
+                onClick={handleRestart}
+                className="text-on-surface-variant hover:text-primary font-semibold text-xs py-2 transition"
+              >
+                Retake Assessment
+              </button>
             </div>
           )}
-
         </div>
-      
-      </div>
+      </main>
     </div>
   );
 }

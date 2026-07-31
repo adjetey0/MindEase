@@ -9,7 +9,6 @@ function Sidebar() {
   const navItems = [
     { name: 'Home', path: '/', icon: 'home' },
     { name: 'Dashboard', path: '/dashboard', icon: 'dashboard' },
-    { name: 'Take Assessment', path: '/assessment', icon: 'psychology' },
     { name: 'Chat', path: '/chat', icon: 'forum' },
     { name: 'Profile', path: '/profile', icon: 'person' },
   ];

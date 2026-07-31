@@ -73,7 +73,6 @@ function Layout() {
                   {[
                     { name: 'Home', path: '/', icon: 'home' },
                     { name: 'Dashboard', path: '/dashboard', icon: 'dashboard' },
-                    { name: 'Take Assessment', path: '/assessment', icon: 'psychology' },
                     { name: 'Programs', path: '/programs', icon: 'apps' },
                     { name: 'Community', path: '/community', icon: 'group' },
                     { name: 'Resources', path: '/resources', icon: 'menu_book' },

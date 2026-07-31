@@ -68,7 +68,7 @@ function Signup() {
 
         <div className="w-full max-w-[420px] space-y-6 animate-slide-up">
           <div className="space-y-2">
-            <h1 className="text-3xl font-bold text-on-surface tracking-tight">Create your account ✨</h1>
+            <h1 className="text-3xl font-bold text-on-surface tracking-tight">Create your account </h1>
             <p className="text-on-surface-variant text-sm">Free access to core mental wellness tools.</p>
           </div>
 

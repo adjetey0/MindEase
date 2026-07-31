@@ -1,281 +1,350 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useLayout } from '../components/Layout';
 import { useData } from '../context/DataContext';
 
+const HOTLINE_CATEGORIES = ['All', 'National', 'Text Support', 'Global'];
+
+const SAFETY_TIPS = [
+  {
+    icon: 'air',
+    title: '4-7-8 Breathing',
+    desc: 'Inhale for 4 seconds, hold for 7, exhale slowly for 8. Repeat 3-4 times to calm your nervous system instantly.',
+    color: 'text-sky-600 bg-sky-500/10 border-sky-500/20',
+  },
+  {
+    icon: 'self_improvement',
+    title: '5-4-3-2-1 Grounding',
+    desc: 'Name 5 things you see, 4 you can touch, 3 you hear, 2 you smell, and 1 you taste. Brings you back to the present.',
+    color: 'text-violet-600 bg-violet-500/10 border-violet-500/20',
+  },
+  {
+    icon: 'favorite',
+    title: 'Self-Compassion Pause',
+    desc: 'Place a hand on your heart. Say: This is a moment of suffering. Suffering is part of life. May I be kind to myself.',
+    color: 'text-rose-600 bg-rose-500/10 border-rose-500/20',
+  },
+  {
+    icon: 'directions_walk',
+    title: 'Move Your Body',
+    desc: 'Even 5 minutes of walking, stretching, or jumping jacks releases endorphins and shifts your mental state.',
+    color: 'text-emerald-600 bg-emerald-500/10 border-emerald-500/20',
+  },
+];
+
 function EmergencySupport() {
-  const { toggleMobileMenu } = useLayout();
   const { hotlines, emergencyContacts, addEmergencyContact, deleteEmergencyContact } = useData();
 
-  const [countrySearch, setCountrySearch] = useState('');
-  const [showAddContactModal, setShowAddContactModal] = useState(false);
-  const [contactName, setContactName] = useState('');
-  const [contactPhone, setContactPhone] = useState('');
-  const [contactRelation, setContactRelation] = useState('Family / Friend');
+  const [activeCategory, setActiveCategory] = useState('All');
+  const [showAddContact, setShowAddContact] = useState(false);
+  const [contactForm, setContactForm] = useState({ name: '', phone: '', relation: '' });
+  const [formError, setFormError] = useState('');
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
 
-  // Interactive Grounding Exercise State
-  const [groundingStep, setGroundingStep] = useState(0);
+  const filteredHotlines =
+    activeCategory === 'All'
+      ? hotlines
+      : hotlines.filter((h) => h.category === activeCategory);
 
-  const groundingSteps = [
-    { count: 5, sense: 'Things You Can SEE', prompt: 'Look around you right now and name 5 items (e.g., lamp, window, clock).' },
-    { count: 4, sense: 'Things You Can TOUCH', prompt: 'Feel 4 physical textures around you (e.g., your desk, clothes, feet on the floor).' },
-    { count: 3, sense: 'Things You Can HEAR', prompt: 'Listen closely for 3 ambient sounds (e.g., hum of fan, outdoor birds, breath).' },
-    { count: 2, sense: 'Things You Can SMELL', prompt: 'Notice 2 distinct scents around you (e.g., coffee, fresh air, soap).' },
-    { count: 1, sense: 'Thing You Can TASTE', prompt: 'Focus on 1 taste in your mouth (or take a quick sip of water).' },
-  ];
-
-  const handleAddContact = (e) => {
-    e.preventDefault();
-    if (!contactName.trim() || !contactPhone.trim()) return;
-    addEmergencyContact({ name: contactName, phone: contactPhone, relation: contactRelation });
-    setContactName('');
-    setContactPhone('');
-    setShowAddContactModal(false);
+  const handleAddContact = () => {
+    if (!contactForm.name.trim() || !contactForm.phone.trim() || !contactForm.relation.trim()) {
+      setFormError('Please fill in all fields.');
+      return;
+    }
+    addEmergencyContact(contactForm);
+    setContactForm({ name: '', phone: '', relation: '' });
+    setShowAddContact(false);
+    setFormError('');
   };
 
-  const filteredHotlines = hotlines.filter((h) =>
-    h.country.toLowerCase().includes(countrySearch.toLowerCase()) ||
-    h.name.toLowerCase().includes(countrySearch.toLowerCase()) ||
-    h.number.toLowerCase().includes(countrySearch.toLowerCase())
-  );
+  const handleDeleteContact = (id) => {
+    deleteEmergencyContact(id);
+    setShowDeleteConfirm(null);
+  };
 
   return (
-    <div className="flex-1 flex flex-col min-h-0 overflow-hidden bg-background">
-      {/* Top Header */}
-      <header className="h-20 w-full flex justify-between items-center px-margin-mobile md:px-margin-desktop bg-surface/80 backdrop-blur-xl border-b border-outline-variant/30 shrink-0 z-10">
-        <div className="flex items-center gap-3">
-          <button onClick={toggleMobileMenu} className="md:hidden text-primary p-2">
-            <span className="material-symbols-outlined">menu</span>
-          </button>
-          <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>spa</span>
-            <span className="font-headline-md text-headline-md font-bold text-primary">MindEase</span>
+    <div className="min-h-full bg-background text-on-background p-4 sm:p-6 lg:p-8 space-y-10">
+      {/* Header */}
+      <div className="max-w-4xl mx-auto">
+        <div className="flex items-start gap-4">
+          <span className="w-14 h-14 rounded-2xl bg-rose-500/10 text-rose-600 flex items-center justify-center shrink-0 shadow-sm border border-rose-500/20">
+            <span className="material-symbols-outlined text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>
+              emergency
+            </span>
+          </span>
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-bold text-on-surface leading-tight">
+              Emergency Support
+            </h1>
+            <p className="text-on-surface-variant text-sm mt-1 leading-relaxed">
+              You are not alone. Reach out immediately if you or someone you know needs urgent help.
+            </p>
           </div>
         </div>
-        <Link to="/chat" className="text-sm font-semibold text-primary hover:underline flex items-center gap-1">
-          <span className="material-symbols-outlined text-base">arrow_back</span>
-          <span>Back to Chat</span>
-        </Link>
-      </header>
 
-      {/* Main Content Area */}
-      <div className="flex-1 overflow-y-auto custom-scrollbar">
-        <main className="pt-8 pb-16 px-margin-mobile md:px-margin-desktop min-h-0">
-
-          {/* Hero Alert Section */}
-          <section className="max-w-[1200px] mx-auto mb-12">
-            <div className="text-center space-y-3 mb-8">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-error/10 text-error font-bold text-xs border border-error/20">
-                <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>warning</span>
-                CRITICAL EMERGENCY SUPPORT AVAILABLE
-              </div>
-              <h1 className="font-headline-xl text-[32px] md:text-[40px] leading-tight font-bold text-on-surface">
-                You are not alone. Help is available 24/7.
-              </h1>
-              <p className="font-body-lg text-on-surface-variant max-w-2xl mx-auto text-sm">
-                If you or someone you know is in immediate crisis, please reach out to one of the free, confidential services below.
-              </p>
-            </div>
-
-            {/* Primary Action Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <a
-                href="tel:988"
-                className="group flex flex-col items-center justify-center p-10 rounded-[2rem] bg-error text-white shadow-xl hover:shadow-2xl transition-all duration-300"
-              >
-                <span className="material-symbols-outlined text-5xl mb-3" style={{ fontVariationSettings: "'FILL' 1" }}>emergency_share</span>
-                <span className="font-headline-md text-2xl font-bold">Call 988 Crisis Lifeline</span>
-                <span className="text-xs mt-2 opacity-90">Free, confidential 24/7 hotline (US/Canada)</span>
-              </a>
-
-              <a
-                href="sms:741741?body=HOME"
-                className="group flex flex-col items-center justify-center p-10 rounded-[2rem] bg-primary text-white shadow-xl hover:shadow-2xl transition-all duration-300"
-              >
-                <span className="material-symbols-outlined text-5xl mb-3" style={{ fontVariationSettings: "'FILL' 1" }}>chat</span>
-                <span className="font-headline-md text-2xl font-bold">Text HOME to 741741</span>
-                <span className="text-xs mt-2 opacity-90">Free 24/7 crisis text line support</span>
-              </a>
-            </div>
-          </section>
-
-          {/* Personal Emergency Contacts Section */}
-          <section className="max-w-[1200px] mx-auto mb-12 bg-surface-container-lowest p-6 md:p-8 rounded-[2rem] border border-outline-variant/20 shadow-sm space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div>
-                <h3 className="font-headline-md text-xl font-bold text-on-surface flex items-center gap-2">
-                  <span className="material-symbols-outlined text-primary">contacts</span>
-                  <span>My Personal Emergency Contacts</span>
-                </h3>
-                <p className="text-xs text-on-surface-variant">Trusted individuals you can call during moments of overwhelm.</p>
-              </div>
-              <button
-                onClick={() => setShowAddContactModal(true)}
-                className="bg-primary text-white px-5 py-2.5 rounded-full text-xs font-bold hover:opacity-90 transition flex items-center justify-center gap-1.5 shadow"
-              >
-                <span className="material-symbols-outlined text-sm">add</span>
-                <span>Add Contact</span>
-              </button>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {emergencyContacts.map((c) => (
-                <div key={c.id} className="p-4 rounded-2xl bg-surface-container-low border border-outline-variant/20 flex items-center justify-between">
-                  <div>
-                    <h4 className="font-bold text-on-surface text-sm">{c.name}</h4>
-                    <p className="text-xs text-primary font-semibold">{c.phone}</p>
-                    <span className="text-[10px] text-outline">{c.relation}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <a href={`tel:${c.phone}`} className="p-2 rounded-xl bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20 transition" title="Call">
-                      <span className="material-symbols-outlined text-lg">call</span>
-                    </a>
-                    <button onClick={() => deleteEmergencyContact(c.id)} className="p-2 rounded-xl hover:bg-error/10 text-error transition" title="Delete">
-                      <span className="material-symbols-outlined text-lg">delete</span>
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* Interactive 5-4-3-2-1 Grounding Tool */}
-          <section className="max-w-[1200px] mx-auto mb-12 bg-gradient-to-r from-primary-container/20 to-secondary-container/20 p-8 rounded-[2rem] border border-outline-variant/20 space-y-6">
-            <div className="flex items-center gap-3">
-              <span className="material-symbols-outlined text-primary text-3xl">self_improvement</span>
-              <div>
-                <h3 className="font-headline-md text-xl font-bold text-on-surface">Interactive Grounding Exercise</h3>
-                <p className="text-xs text-on-surface-variant">Step-by-step sensory grounding to slow down anxiety.</p>
-              </div>
-            </div>
-
-            <div className="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/10 text-center space-y-4">
-              <div className="inline-block w-14 h-14 rounded-full bg-primary text-white font-bold text-2xl leading-[56px]">
-                {groundingSteps[groundingStep].count}
-              </div>
-              <h4 className="font-bold text-on-surface text-lg">{groundingSteps[groundingStep].sense}</h4>
-              <p className="text-on-surface-variant text-sm max-w-full mx-auto">{groundingSteps[groundingStep].prompt}</p>
-
-              <div className="flex justify-center gap-3 pt-2">
-                <button
-                  disabled={groundingStep === 0}
-                  onClick={() => setGroundingStep((prev) => Math.max(0, prev - 1))}
-                  className="px-5 py-2 border rounded-full text-xs font-bold disabled:opacity-30"
-                >
-                  Previous Step
-                </button>
-                <button
-                  disabled={groundingStep === groundingSteps.length - 1}
-                  onClick={() => setGroundingStep((prev) => Math.min(groundingSteps.length - 1, prev + 1))}
-                  className="px-6 py-2 bg-primary text-white rounded-full text-xs font-bold shadow hover:opacity-90 disabled:opacity-30"
-                >
-                  Next Step ({groundingStep + 1}/{groundingSteps.length})
-                </button>
-              </div>
-            </div>
-          </section>
-
-          {/* Dynamic Hotlines Directory */}
-          <section className="max-w-[1200px] mx-auto bg-surface-container-lowest p-6 md:p-8 rounded-[2rem] border border-outline-variant/20 shadow-sm space-y-6">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-              <div>
-                <h3 className="font-headline-md text-xl font-bold text-on-surface">Global Crisis Helplines</h3>
-                <p className="text-xs text-on-surface-variant">Browse or search emergency lifelines worldwide.</p>
-              </div>
-              <input
-                type="text"
-                placeholder="Search country or service..."
-                value={countrySearch}
-                onChange={(e) => setCountrySearch(e.target.value)}
-                className="w-full md:w-64 px-4 py-2 rounded-full bg-surface-container-low text-xs border border-outline-variant/20 focus:outline-none focus:ring-2 focus:ring-primary/20"
-              />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {filteredHotlines.map((h) => (
-                <div key={h.id} className="p-5 rounded-2xl bg-surface-container-low border border-outline-variant/10 flex items-center justify-between">
-                  <div>
-                    <span className="text-[10px] uppercase font-bold text-primary tracking-wider">{h.country}</span>
-                    <h4 className="font-bold text-on-surface text-sm">{h.name}</h4>
-                    <p className="text-xs text-on-surface-variant mt-1">{h.text}</p>
-                  </div>
-                  <a href={`tel:${h.number}`} className="px-4 py-2 bg-primary text-white rounded-full text-xs font-bold hover:opacity-90 transition shadow">
-                    Call
-                  </a>
-                </div>
-              ))}
-            </div>
-          </section>
-
-        </main>
+        {/* Crisis Banner */}
+        <div className="mt-6 rounded-2xl bg-rose-600 text-white p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4 shadow-lg">
+          <span className="material-symbols-outlined text-3xl shrink-0" style={{ fontVariationSettings: "'FILL' 1" }}>
+            warning
+          </span>
+          <div className="flex-1">
+            <p className="font-bold text-base">If you are in immediate danger</p>
+            <p className="text-rose-100 text-sm mt-0.5">
+              Call your local emergency services (e.g., 911 in the US, 999 in UK) right now. Do not wait.
+            </p>
+          </div>
+          <a
+            href="tel:911"
+            className="shrink-0 bg-white text-rose-600 font-bold px-5 py-2.5 rounded-full text-sm hover:bg-rose-50 transition flex items-center gap-1.5 shadow-sm"
+          >
+            <span className="material-symbols-outlined text-base">call</span>
+            Call Now
+          </a>
+        </div>
       </div>
 
-      {/* Add Emergency Contact Modal */}
-      {showAddContactModal && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-surface-container-lowest max-w-2xl w-full rounded-3xl p-6 shadow-2xl space-y-4">
-            <div className="flex justify-between items-center">
-              <h3 className="font-headline-md font-bold text-on-surface text-lg">Add Emergency Contact</h3>
-              <button onClick={() => setShowAddContactModal(false)} className="p-1 text-on-surface-variant hover:text-primary">
-                <span className="material-symbols-outlined">close</span>
+      {/* Crisis Hotlines */}
+      <section className="max-w-4xl mx-auto space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <h2 className="text-lg font-bold text-on-surface flex items-center gap-2">
+            <span className="material-symbols-outlined text-primary text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>
+              phone_in_talk
+            </span>
+            Crisis Hotlines
+          </h2>
+          <div className="flex flex-wrap gap-2">
+            {HOTLINE_CATEGORIES.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                className={`px-4 py-1.5 rounded-full text-xs font-bold border transition-all ${
+                  activeCategory === cat
+                    ? 'bg-primary text-white border-primary shadow-sm'
+                    : 'bg-surface-container text-on-surface-variant border-outline-variant/30 hover:border-primary/40'
+                }`}
+              >
+                {cat}
               </button>
-            </div>
+            ))}
+          </div>
+        </div>
 
-            <form onSubmit={handleAddContact} className="space-y-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {filteredHotlines.map((hotline) => (
+            <div
+              key={hotline.id}
+              className="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/20 shadow-sm hover:shadow-md transition-shadow space-y-3"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <span className="text-xs font-bold uppercase tracking-wider text-primary bg-primary/10 border border-primary/20 px-2.5 py-0.5 rounded-full">
+                    {hotline.category}
+                  </span>
+                  <p className="text-xs text-on-surface-variant mt-1.5 font-medium">{hotline.country}</p>
+                  <p className="font-bold text-on-surface text-base mt-0.5 leading-snug">{hotline.name}</p>
+                </div>
+                <span className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                  <span className="material-symbols-outlined text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>
+                    headset_mic
+                  </span>
+                </span>
+              </div>
+              <p className="text-on-surface-variant text-xs leading-relaxed">{hotline.text}</p>
+              <a
+                href={hotline.number.includes('.') ? `https://${hotline.number}` : `tel:${hotline.number}`}
+                target={hotline.number.includes('.') ? '_blank' : undefined}
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 bg-primary text-white font-bold text-xs px-4 py-2 rounded-full hover:opacity-90 transition shadow-sm"
+              >
+                <span className="material-symbols-outlined text-sm">
+                  {hotline.number.includes('.') ? 'open_in_new' : 'call'}
+                </span>
+                {hotline.number}
+              </a>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Immediate Coping Strategies */}
+      <section className="max-w-4xl mx-auto space-y-4">
+        <h2 className="text-lg font-bold text-on-surface flex items-center gap-2">
+          <span className="material-symbols-outlined text-primary text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>
+            psychology_alt
+          </span>
+          Immediate Coping Strategies
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {SAFETY_TIPS.map((tip) => (
+            <div
+              key={tip.title}
+              className={`rounded-2xl p-5 border flex gap-4 bg-surface-container-lowest shadow-sm ${tip.color}`}
+            >
+              <span
+                className="material-symbols-outlined text-2xl shrink-0 mt-0.5"
+                style={{ fontVariationSettings: "'FILL' 1" }}
+              >
+                {tip.icon}
+              </span>
               <div>
-                <label className="block text-xs font-bold text-on-surface-variant mb-1">Contact Name</label>
+                <p className="font-bold text-on-surface text-sm">{tip.title}</p>
+                <p className="text-on-surface-variant text-xs mt-1 leading-relaxed">{tip.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Personal Emergency Contacts */}
+      <section className="max-w-4xl mx-auto space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-bold text-on-surface flex items-center gap-2">
+            <span className="material-symbols-outlined text-primary text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>
+              contacts
+            </span>
+            My Emergency Contacts
+          </h2>
+          <button
+            onClick={() => { setShowAddContact((v) => !v); setFormError(''); }}
+            className="flex items-center gap-1.5 bg-primary text-white text-xs font-bold px-4 py-2 rounded-full hover:opacity-90 transition shadow-sm"
+          >
+            <span className="material-symbols-outlined text-sm">{showAddContact ? 'close' : 'add'}</span>
+            {showAddContact ? 'Cancel' : 'Add Contact'}
+          </button>
+        </div>
+
+        {showAddContact && (
+          <div className="bg-surface-container-lowest rounded-2xl p-6 border border-outline-variant/20 shadow-sm space-y-4">
+            <p className="text-sm font-semibold text-on-surface">New Emergency Contact</p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="space-y-1">
+                <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Full Name</label>
                 <input
                   type="text"
-                  placeholder="e.g. Dr. Watson or Mom"
-                  value={contactName}
-                  onChange={(e) => setContactName(e.target.value)}
-                  required
-                  className="w-full p-3 rounded-xl bg-surface-container-low border border-outline-variant/20 text-sm font-semibold focus:outline-none"
+                  value={contactForm.name}
+                  onChange={(e) => setContactForm((p) => ({ ...p, name: e.target.value }))}
+                  placeholder="e.g. Dr. Jane Smith"
+                  className="w-full bg-surface-container rounded-xl px-4 py-2.5 text-sm text-on-surface border border-outline-variant/30 focus:outline-none focus:border-primary/60 transition"
                 />
               </div>
-
-              <div>
-                <label className="block text-xs font-bold text-on-surface-variant mb-1">Phone Number</label>
+              <div className="space-y-1">
+                <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Phone</label>
                 <input
                   type="tel"
+                  value={contactForm.phone}
+                  onChange={(e) => setContactForm((p) => ({ ...p, phone: e.target.value }))}
                   placeholder="+1 (555) 000-0000"
-                  value={contactPhone}
-                  onChange={(e) => setContactPhone(e.target.value)}
-                  required
-                  className="w-full p-3 rounded-xl bg-surface-container-low border border-outline-variant/20 text-sm font-semibold focus:outline-none"
+                  className="w-full bg-surface-container rounded-xl px-4 py-2.5 text-sm text-on-surface border border-outline-variant/30 focus:outline-none focus:border-primary/60 transition"
                 />
               </div>
-
-              <div>
-                <label className="block text-xs font-bold text-on-surface-variant mb-1">Relationship</label>
+              <div className="space-y-1">
+                <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Relation</label>
                 <input
                   type="text"
-                  placeholder="e.g. Therapist, Brother, Friend"
-                  value={contactRelation}
-                  onChange={(e) => setContactRelation(e.target.value)}
-                  className="w-full p-3 rounded-xl bg-surface-container-low border border-outline-variant/20 text-sm font-semibold focus:outline-none"
+                  value={contactForm.relation}
+                  onChange={(e) => setContactForm((p) => ({ ...p, relation: e.target.value }))}
+                  placeholder="e.g. Therapist, Parent"
+                  className="w-full bg-surface-container rounded-xl px-4 py-2.5 text-sm text-on-surface border border-outline-variant/30 focus:outline-none focus:border-primary/60 transition"
                 />
               </div>
+            </div>
+            {formError && <p className="text-xs text-error font-medium">{formError}</p>}
+            <button
+              onClick={handleAddContact}
+              className="bg-primary text-white font-bold text-sm px-6 py-2.5 rounded-full hover:opacity-90 transition shadow-sm"
+            >
+              Save Contact
+            </button>
+          </div>
+        )}
 
-              <div className="flex justify-end gap-3 pt-2">
+        {emergencyContacts && emergencyContacts.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {emergencyContacts.map((contact) => (
+              <div
+                key={contact.id}
+                className="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/20 shadow-sm flex items-center gap-4 group"
+              >
+                <div className="w-12 h-12 rounded-2xl bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0 font-bold text-lg">
+                  {contact.name.charAt(0).toUpperCase()}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-bold text-on-surface text-sm truncate">{contact.name}</p>
+                  <p className="text-xs text-on-surface-variant mt-0.5">{contact.relation}</p>
+                  <a
+                    href={`tel:${contact.phone}`}
+                    className="text-xs text-primary font-semibold mt-0.5 hover:underline flex items-center gap-1"
+                  >
+                    <span className="material-symbols-outlined text-sm">call</span>
+                    {contact.phone}
+                  </a>
+                </div>
+                <div className="flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <a
+                    href={`tel:${contact.phone}`}
+                    className="w-8 h-8 rounded-xl bg-primary/10 text-primary flex items-center justify-center hover:bg-primary/20 transition"
+                    title="Call"
+                  >
+                    <span className="material-symbols-outlined text-base">call</span>
+                  </a>
+                  <button
+                    onClick={() => setShowDeleteConfirm(contact.id)}
+                    className="w-8 h-8 rounded-xl bg-error/10 text-error flex items-center justify-center hover:bg-error/20 transition"
+                    title="Delete"
+                  >
+                    <span className="material-symbols-outlined text-base">delete</span>
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="bg-surface-container-lowest rounded-2xl p-8 border border-outline-variant/20 text-center space-y-2">
+            <span className="material-symbols-outlined text-4xl text-on-surface-variant/40">contacts</span>
+            <p className="text-on-surface-variant text-sm">No emergency contacts added yet.</p>
+            <p className="text-xs text-on-surface-variant/70">Add trusted people who can help in a crisis.</p>
+          </div>
+        )}
+
+        {showDeleteConfirm !== null && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+            <div className="bg-surface-container-lowest rounded-3xl p-7 max-w-sm w-full shadow-2xl border border-outline-variant/20 text-center space-y-5">
+              <span className="material-symbols-outlined text-4xl text-error" style={{ fontVariationSettings: "'FILL' 1" }}>
+                delete_forever
+              </span>
+              <div>
+                <p className="font-bold text-on-surface text-base">Remove Contact?</p>
+                <p className="text-on-surface-variant text-sm mt-1">This contact will be permanently removed from your emergency list.</p>
+              </div>
+              <div className="flex gap-3">
                 <button
-                  type="button"
-                  onClick={() => setShowAddContactModal(false)}
-                  className="px-5 py-2.5 rounded-full text-xs font-bold border hover:bg-surface-container-high"
+                  onClick={() => setShowDeleteConfirm(null)}
+                  className="flex-1 border border-outline-variant/30 text-on-surface font-bold py-2.5 rounded-full text-sm hover:bg-surface-container transition"
                 >
                   Cancel
                 </button>
                 <button
-                  type="submit"
-                  className="px-6 py-2.5 rounded-full text-xs font-bold bg-primary text-white hover:opacity-90 shadow"
+                  onClick={() => handleDeleteContact(showDeleteConfirm)}
+                  className="flex-1 bg-error text-white font-bold py-2.5 rounded-full text-sm hover:opacity-90 transition shadow-sm"
                 >
-                  Save Contact
+                  Remove
                 </button>
               </div>
-            </form>
+            </div>
           </div>
+        )}
+      </section>
+
+      {/* Disclaimer */}
+      <section className="max-w-4xl mx-auto">
+        <div className="rounded-2xl bg-surface-container border border-outline-variant/20 p-5 flex gap-3 items-start">
+          <span className="material-symbols-outlined text-on-surface-variant text-xl shrink-0 mt-0.5" style={{ fontVariationSettings: "'FILL' 1" }}>
+            info
+          </span>
+          <p className="text-xs text-on-surface-variant leading-relaxed">
+            <strong className="text-on-surface">Important: </strong>
+            MindEase is a wellness support tool and is not a substitute for professional medical or psychiatric care. If you or someone else is in immediate danger, please contact emergency services in your area immediately.
+          </p>
         </div>
-      )}
+      </section>
     </div>
   );
 }

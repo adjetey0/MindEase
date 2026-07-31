@@ -4,7 +4,7 @@ import { useData } from '../context/DataContext';
 
 function Login() {
   const navigate = useNavigate();
-  const { updateProfile } = useData();
+  const { updateProfile, hasCompletedAssessment } = useData();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -21,7 +21,12 @@ function Login() {
         name: capitalizedName || 'User'
       });
     }
-    navigate('/dashboard');
+    // First-time users get routed to the assessment for personalization
+    if (!hasCompletedAssessment) {
+      navigate('/assessment');
+    } else {
+      navigate('/dashboard');
+    }
   };
 
   return (
