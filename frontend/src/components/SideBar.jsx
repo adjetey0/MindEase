@@ -24,7 +24,7 @@ function Sidebar() {
         {!sidebarCollapsed && (
           <div>
             <h1 className="font-headline-md text-headline-md font-bold text-primary tracking-tight">MindEase</h1>
-            <p className="font-label-md text-label-md text-on-surface-variant mt-0.5">Mental Wellbeing</p>
+            {/* <p className="font-label-md text-label-md text-on-surface-variant mt-0.5">Mental Wellbeing</p> */}
           </div>
         )}
 

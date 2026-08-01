@@ -205,21 +205,36 @@ const initialDefaultData = {
       title: 'Morning Grounding Practice',
       guide: 'Guided by Dr. Aris Thorne',
       duration: '15:00',
-      thumbnail: 'https://images.unsplash.com/photo-1545205597-3d9d02c29597?auto=format&fit=crop&w=600&q=80'
+      thumbnail: 'https://images.unsplash.com/photo-1545205597-3d9d02c29597?auto=format&fit=crop&w=600&q=80',
+      videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+      description: 'Start your morning with a 15-minute gentle grounding exercise designed to calm your central nervous system and set a mindful tone for the day.'
     },
     {
       id: 2,
       title: 'Deep Sleep Soundscapes',
       guide: 'Ambient Therapy Series',
       duration: '22:45',
-      thumbnail: 'https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?auto=format&fit=crop&w=600&q=80'
+      thumbnail: 'https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?auto=format&fit=crop&w=600&q=80',
+      videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
+      description: 'Soothing oceanic waves paired with ambient delta frequency soundscapes to guide your mind into deep, restorative REM sleep.'
     },
     {
       id: 3,
       title: 'Coping with Social Anxiety',
       guide: 'Expert Series with Sarah Jenkins',
       duration: '08:12',
-      thumbnail: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80'
+      thumbnail: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80',
+      videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+      description: 'Learn evidence-based cognitive strategies and diaphragmatic breathing techniques to manage social anxiety in high-pressure environments.'
+    },
+    {
+      id: 4,
+      title: 'Mindful Breathing & Calmness',
+      guide: 'Guided Meditation Series',
+      duration: '10:30',
+      thumbnail: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=600&q=80',
+      videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4',
+      description: 'A 10-minute breathwork session focusing on rhythmic inhalation and slow exhalation to release muscular tension.'
     }
   ],
   emergencyContacts: [

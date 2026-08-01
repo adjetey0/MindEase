@@ -77,19 +77,19 @@ function Dashboard() {
       </header>
 
       {/* Page Scrollable Area */}
-      <div className="flex-1 overflow-y-auto min-h-0 flex flex-col">
-        <div className="max-w-[1200px] w-full mx-auto p-margin-mobile md:p-lg space-y-md flex-grow">
+      <div className="flex-1 overflow-y-auto min-h-0 flex flex-col custom-scrollbar">
+        <div className="max-w-[1200px] w-full mx-auto p-4 sm:p-6 md:p-lg space-y-4 sm:space-y-md flex-grow">
 
           {/* ── Assessment Personalization Banner ─────────────────── */}
           {hasCompletedAssessment && assessmentProfile ? (
-            <div className="bg-gradient-to-r from-primary/10 via-secondary-container/30 to-primary/5 rounded-[2rem] p-5 sm:p-6 border border-primary/20 card-shadow flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-2xl bg-primary/15 text-primary flex items-center justify-center shrink-0">
-                  <span className="material-symbols-outlined text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>psychology</span>
+            <div className="bg-gradient-to-r from-primary/10 via-secondary-container/30 to-primary/5 rounded-2xl sm:rounded-[2rem] p-4 sm:p-6 border border-primary/20 card-shadow flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all hover:shadow-md">
+              <div className="flex items-start gap-3 sm:gap-4">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-primary/15 text-primary flex items-center justify-center shrink-0">
+                  <span className="material-symbols-outlined text-xl sm:text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>psychology</span>
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-primary uppercase tracking-wider mb-0.5">Personalized for You</p>
-                  <h3 className="font-bold text-on-surface text-base">
+                  <p className="text-[11px] sm:text-xs font-bold text-primary uppercase tracking-wider mb-0.5">Personalized for You</p>
+                  <h3 className="font-bold text-on-surface text-sm sm:text-base">
                     Goal: {assessmentProfile.primaryGoalTitle}
                   </h3>
                   <p className="text-on-surface-variant text-xs mt-0.5">
@@ -102,26 +102,26 @@ function Dashboard() {
               </div>
               <button
                 onClick={() => navigate('/assessment?retake=true')}
-                className="shrink-0 text-xs font-bold text-primary border border-primary/30 px-4 py-2 rounded-full hover:bg-primary/10 transition flex items-center gap-1.5"
+                className="shrink-0 text-xs font-bold text-primary border border-primary/30 px-4 py-2 rounded-full hover:bg-primary/10 transition-all active:scale-95 flex items-center justify-center gap-1.5"
               >
                 <span className="material-symbols-outlined text-sm">refresh</span>
                 Update Profile
               </button>
             </div>
           ) : (
-            <div className="bg-surface-container-lowest rounded-[2rem] p-5 sm:p-6 border border-outline-variant/20 card-shadow flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-2xl bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0">
-                  <span className="material-symbols-outlined text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>quiz</span>
+            <div className="bg-surface-container-lowest rounded-2xl sm:rounded-[2rem] p-4 sm:p-6 border border-outline-variant/20 card-shadow flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all hover:shadow-md">
+              <div className="flex items-start gap-3 sm:gap-4">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0">
+                  <span className="material-symbols-outlined text-xl sm:text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>quiz</span>
                 </div>
                 <div>
-                  <h3 className="font-bold text-on-surface text-base">Personalize Your Experience</h3>
+                  <h3 className="font-bold text-on-surface text-sm sm:text-base">Personalize Your Experience</h3>
                   <p className="text-on-surface-variant text-xs mt-0.5">Take a quick 4-question assessment so we can tailor your dashboard and AI companion.</p>
                 </div>
               </div>
               <button
                 onClick={() => navigate('/assessment')}
-                className="shrink-0 bg-primary text-white text-xs font-bold px-5 py-2.5 rounded-full hover:opacity-90 transition shadow-sm flex items-center gap-1.5"
+                className="shrink-0 bg-primary text-white text-xs font-bold px-5 py-2.5 rounded-full hover:opacity-90 transition-all active:scale-95 shadow-sm flex items-center justify-center gap-1.5"
               >
                 <span className="material-symbols-outlined text-sm">arrow_forward</span>
                 Take Assessment
@@ -130,49 +130,48 @@ function Dashboard() {
           )}
 
           {/* Daily Quick Mood Check-in */}
-          <div className="bg-surface-container-lowest rounded-[2rem] p-md border border-outline-variant/10 card-shadow">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+          <div className="bg-surface-container-lowest rounded-2xl sm:rounded-[2rem] p-4 sm:p-md border border-outline-variant/10 card-shadow">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4 mb-4">
               <div>
-                <h3 className="font-headline-sm text-headline-sm font-semibold text-on-surface">Daily Mood Check-in</h3>
-                <p className="font-body-md text-body-md text-on-surface-variant">How are you feeling right now?</p>
+                <h3 className="font-headline-sm text-base sm:text-headline-sm font-semibold text-on-surface">Daily Mood Check-in</h3>
+                <p className="font-body-md text-xs sm:text-body-md text-on-surface-variant">How are you feeling right now?</p>
               </div>
               {moodLoggedSuccess && (
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-emerald-500/10 text-emerald-600 rounded-full text-xs font-semibold">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-emerald-500/10 text-emerald-600 rounded-full text-xs font-semibold animate-scale-in">
                   <span className="material-symbols-outlined text-sm">check_circle</span>
                   <span>Logged to your profile! (+1 Streak)</span>
                 </div>
               )}
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+            <div className="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-5 gap-2.5 sm:gap-3">
               {moodOptions.map((m) => (
                 <button
                   key={m.label}
                   onClick={() => handleQuickMoodLog(m.label)}
-                  className={`p-4 rounded-2xl border flex flex-col items-center gap-2 transition-all hover:scale-105 active:scale-95 ${m.color} ${
-                    selectedMood === m.label ? 'ring-2 ring-primary' : ''
-                  }`}
+                  className={`p-3 sm:p-4 rounded-2xl border flex flex-col items-center gap-1.5 sm:gap-2 transition-all duration-300 hover:scale-105 active:scale-95 ${m.color} ${selectedMood === m.label ? 'ring-2 ring-primary shadow-sm' : ''
+                    }`}
                 >
-                  <span className="material-symbols-outlined text-3xl">{m.icon}</span>
-                  <span className="font-label-md text-label-md font-semibold">{m.label}</span>
+                  <span className="material-symbols-outlined text-2xl sm:text-3xl">{m.icon}</span>
+                  <span className="font-label-md text-xs sm:text-label-md font-semibold">{m.label}</span>
                 </button>
               ))}
             </div>
           </div>
 
           {/* ─── Daily Streak Chart ─────────────────────────────── */}
-          <div className="bg-surface-container-lowest rounded-[2rem] p-md border border-outline-variant/10 card-shadow">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+          <div className="bg-surface-container-lowest rounded-2xl sm:rounded-[2rem] p-4 sm:p-md border border-outline-variant/10 card-shadow">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
               <div>
-                <h3 className="font-headline-sm text-headline-sm font-semibold text-on-surface flex items-center gap-2">
+                <h3 className="font-headline-sm text-base sm:text-headline-sm font-semibold text-on-surface flex items-center gap-2">
                   <span className="material-symbols-outlined text-amber-500" style={{ fontVariationSettings: "'FILL' 1" }}>local_fire_department</span>
                   Daily Streak Tracker
                 </h3>
-                <p className="font-body-md text-body-md text-on-surface-variant">Your mood check-in history over the last 14 days</p>
+                <p className="font-body-md text-xs sm:text-body-md text-on-surface-variant">Your mood check-in history over the last 14 days</p>
               </div>
-              <div className="flex items-center gap-2 px-4 py-2 bg-amber-500/10 text-amber-600 rounded-full border border-amber-500/20">
-                <span className="material-symbols-outlined text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>whatshot</span>
-                <span className="font-bold text-lg">{profile.streak}</span>
+              <div className="flex items-center gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 bg-amber-500/10 text-amber-600 rounded-full border border-amber-500/20 w-fit">
+                <span className="material-symbols-outlined text-base sm:text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>whatshot</span>
+                <span className="font-bold text-base sm:text-lg">{profile.streak}</span>
                 <span className="text-xs font-semibold">day streak</span>
               </div>
             </div>
@@ -190,46 +189,47 @@ function Dashboard() {
               };
               const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-              // Get the last 14 mood logs (most recent first from DataContext), reverse for left-to-right chronological
               const chartLogs = [...moodLogs].slice(0, 14).reverse();
 
               return (
                 <div className="space-y-4">
-                  {/* Chart Bars */}
-                  <div className="flex items-end gap-1.5 sm:gap-2 h-40 sm:h-48 px-2">
-                    {chartLogs.map((log, i) => {
-                      const meta = emotionMap[log.emotion] || { height: 50, color: 'bg-primary', emoji: '🙂' };
-                      const date = new Date(log.date);
-                      const dayLabel = dayNames[date.getDay()];
-                      const dateLabel = `${date.getMonth() + 1}/${date.getDate()}`;
+                  {/* Chart Bars with smooth scroll container for small screens */}
+                  <div className="overflow-x-auto custom-scrollbar pb-2">
+                    <div className="flex items-end gap-1.5 sm:gap-2 h-36 sm:h-48 px-1 min-w-[340px]">
+                      {chartLogs.map((log, i) => {
+                        const meta = emotionMap[log.emotion] || { height: 50, color: 'bg-primary', emoji: '🙂' };
+                        const date = new Date(log.date);
+                        const dayLabel = dayNames[date.getDay()];
+                        const dateLabel = `${date.getMonth() + 1}/${date.getDate()}`;
 
-                      return (
-                        <div key={log.id || i} className="flex-1 flex flex-col items-center gap-1 group relative">
-                          {/* Tooltip on hover */}
-                          <div className="absolute -top-14 left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface px-3 py-1.5 rounded-lg text-[10px] font-semibold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 shadow-lg">
-                            {log.emotion} • {log.date}
-                            {log.note && <span className="block text-[9px] opacity-70 mt-0.5">"{log.note}"</span>}
+                        return (
+                          <div key={log.id || i} className="flex-1 flex flex-col items-center gap-1 group relative">
+                            {/* Tooltip on hover */}
+                            <div className="absolute -top-14 left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface px-2.5 py-1 rounded-lg text-[10px] font-semibold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none z-10 shadow-lg">
+                              {log.emotion} • {log.date}
+                              {log.note && <span className="block text-[9px] opacity-70 mt-0.5">"{log.note}"</span>}
+                            </div>
+                            {/* Emoji on top */}
+                            <span className="text-xs sm:text-base opacity-70 group-hover:opacity-100 group-hover:scale-125 transition-all duration-200">{meta.emoji}</span>
+                            {/* Bar */}
+                            <div
+                              className={`w-full rounded-t-lg ${meta.color} transition-all duration-500 ease-out hover:brightness-110 cursor-pointer min-w-[12px]`}
+                              style={{
+                                height: `${meta.height}%`,
+                                animationDelay: `${i * 40}ms`,
+                              }}
+                            />
+                            {/* Day label */}
+                            <span className="text-[9px] sm:text-[10px] text-on-surface-variant font-semibold">{dayLabel}</span>
+                            <span className="text-[8px] text-outline hidden sm:block">{dateLabel}</span>
                           </div>
-                          {/* Emoji on top */}
-                          <span className="text-sm sm:text-base opacity-0 group-hover:opacity-100 transition-opacity">{meta.emoji}</span>
-                          {/* Bar */}
-                          <div
-                            className={`w-full rounded-t-lg ${meta.color} transition-all duration-500 hover:opacity-80 cursor-pointer min-w-[14px]`}
-                            style={{
-                              height: `${meta.height}%`,
-                              animationDelay: `${i * 60}ms`,
-                            }}
-                          />
-                          {/* Day label */}
-                          <span className="text-[9px] sm:text-[10px] text-on-surface-variant font-semibold">{dayLabel}</span>
-                          <span className="text-[8px] text-outline hidden sm:block">{dateLabel}</span>
-                        </div>
-                      );
-                    })}
+                        );
+                      })}
+                    </div>
                   </div>
 
                   {/* Legend */}
-                  <div className="flex flex-wrap gap-3 pt-2 border-t border-outline-variant/10 justify-center">
+                  <div className="flex flex-wrap gap-2.5 sm:gap-3 pt-2 border-t border-outline-variant/10 justify-center">
                     {Object.entries(emotionMap).slice(0, 6).map(([label, meta]) => (
                       <div key={label} className="flex items-center gap-1.5">
                         <span className={`w-2.5 h-2.5 rounded-full ${meta.color}`} />
@@ -372,7 +372,7 @@ function Dashboard() {
           )}
 
         </div>
-        <Footer />
+
       </div>
 
       {/* FAB (Mobile only for Quick Chat) */}

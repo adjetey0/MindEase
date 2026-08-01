@@ -165,17 +165,17 @@ function Chat() {
       )}
 
       {/* Chat Messages Canvas */}
-      <div className="flex-1 overflow-y-auto py-lg px-margin-mobile md:px-0 custom-scrollbar">
-        <div className="max-w-[1100px] mx-auto space-y-md p-5">
-          
+      <div className="flex-1 overflow-y-auto py-4 sm:py-lg px-2 sm:px-margin-mobile md:px-0 custom-scrollbar">
+        <div className="max-w-[1100px] mx-auto space-y-4 sm:space-y-md p-2 sm:p-5">
+
           {/* Assessment-Based Personalization Context Banner */}
           {assessmentProfile && chatMessages.length <= 1 && (
-            <div className="flex gap-4 items-start">
-              <div className="w-10 h-10 rounded-full bg-primary-container flex-shrink-0 flex items-center justify-center shadow-sm">
-                <span className="material-symbols-outlined text-on-primary-container text-md" style={{ fontVariationSettings: "'FILL' 1" }}>spa</span>
+            <div className="flex gap-3 sm:gap-4 items-start animate-slide-up">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-primary-container flex-shrink-0 flex items-center justify-center shadow-sm">
+                <span className="material-symbols-outlined text-on-primary-container text-sm sm:text-md" style={{ fontVariationSettings: "'FILL' 1" }}>spa</span>
               </div>
-              <div className="max-w-[85%] bg-gradient-to-br from-primary/8 via-surface-container-lowest to-primary/5 border border-primary/20 p-4 rounded-[1.25rem] rounded-bl-[4px] shadow-sm space-y-2">
-                <p className="text-on-surface leading-relaxed text-sm">
+              <div className="max-w-[92%] sm:max-w-[85%] bg-gradient-to-br from-primary/8 via-surface-container-lowest to-primary/5 border border-primary/20 p-3.5 sm:p-4 rounded-[1.25rem] rounded-bl-[4px] shadow-sm space-y-2">
+                <p className="text-on-surface leading-relaxed text-xs sm:text-sm">
                   I can see you're working on <strong>{assessmentProfile.primaryGoalTitle?.toLowerCase()}</strong>.
                   {assessmentProfile.emotionalStateTitle && (
                     <> You mentioned feeling <strong>{assessmentProfile.emotionalStateTitle?.toLowerCase()}</strong> recently — that's completely okay.</>
@@ -196,9 +196,9 @@ function Chat() {
 
           {/* Daily Quick Mood Check-in Pill */}
           {!moodSelected && (
-            <section className="glass-panel rounded-3xl p-md mb-lg shadow-sm">
-              <p className="text-center font-label-md text-label-md text-on-surface-variant mb-4">How are you feeling right now?</p>
-              <div className="flex justify-between items-center max-w-sm mx-auto">
+            <section className="glass-panel rounded-2xl sm:rounded-3xl p-3.5 sm:p-md mb-4 sm:mb-lg shadow-sm animate-scale-in">
+              <p className="text-center font-label-md text-xs sm:text-label-md text-on-surface-variant mb-3">How are you feeling right now?</p>
+              <div className="flex justify-around items-center max-w-[300px] mx-auto">
                 {[
                   { emoji: '😌', label: 'Calm' },
                   { emoji: '😐', label: 'Okay' },
@@ -208,10 +208,10 @@ function Chat() {
                   <button
                     key={mood.label}
                     onClick={() => handleMoodSelect(mood.label)}
-                    className="flex flex-col items-center gap-1.5 p-2 rounded-xl hover:bg-surface-container-high transition-all"
+                    className="flex flex-col items-center gap-1 p-2 rounded-xl hover:bg-surface-container-high transition-all duration-200 active:scale-90"
                   >
-                    <span className="text-2xl">{mood.emoji}</span>
-                    <span className="text-xs text-on-surface-variant font-semibold">{mood.label}</span>
+                    <span className="text-xl sm:text-2xl">{mood.emoji}</span>
+                    <span className="text-[11px] sm:text-xs text-on-surface-variant font-semibold">{mood.label}</span>
                   </button>
                 ))}
               </div>
@@ -221,20 +221,20 @@ function Chat() {
           {/* Dynamic Messages */}
           {chatMessages.map((msg) =>
             msg.sender === 'bot' ? (
-              <div key={msg.id} className="flex gap-4 items-start">
-                <div className="w-10 h-10 rounded-full bg-primary-container flex-shrink-0 flex items-center justify-center shadow-sm">
-                  <span className="material-symbols-outlined text-on-primary-container text-md" style={{ fontVariationSettings: "'FILL' 1" }}>spa</span>
+              <div key={msg.id} className="flex gap-2.5 sm:gap-4 items-start animate-slide-up">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-primary-container flex-shrink-0 flex items-center justify-center shadow-sm">
+                  <span className="material-symbols-outlined text-on-primary-container text-sm sm:text-md" style={{ fontVariationSettings: "'FILL' 1" }}>spa</span>
                 </div>
-                <div className="max-w-[85%] bg-surface-container-lowest border border-outline-variant/30 p-md rounded-[1.25rem] rounded-bl-[4px] shadow-sm space-y-2">
-                  <p className="text-on-surface leading-relaxed text-sm">{msg.text}</p>
+                <div className="max-w-[90%] sm:max-w-[85%] bg-surface-container-lowest border border-outline-variant/30 p-3 sm:p-md rounded-[1.25rem] rounded-bl-[4px] shadow-sm space-y-1.5 transition-all">
+                  <p className="text-on-surface leading-relaxed text-xs sm:text-sm">{msg.text}</p>
                   {msg.timestamp && <span className="text-[10px] text-outline block">{msg.timestamp}</span>}
                 </div>
               </div>
             ) : (
-              <div key={msg.id} className="flex flex-row-reverse gap-4 items-start">
-                <img src={profile.avatar} alt={profile.name} className="w-10 h-10 rounded-full object-cover border-2 border-primary/20" />
-                <div className="max-w-[85%] bg-primary text-white p-md rounded-[1.25rem] rounded-br-[4px] shadow-md space-y-2">
-                  <p className="leading-relaxed text-sm">{msg.text}</p>
+              <div key={msg.id} className="flex flex-row-reverse gap-2.5 sm:gap-4 items-start animate-slide-up">
+                <img src={profile.avatar} alt={profile.name} className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover border-2 border-primary/20" />
+                <div className="max-w-[90%] sm:max-w-[85%] bg-primary text-white p-3 sm:p-md rounded-[1.25rem] rounded-br-[4px] shadow-md space-y-1.5 transition-all">
+                  <p className="leading-relaxed text-xs sm:text-sm">{msg.text}</p>
                   {msg.timestamp && <span className="text-[10px] text-white/70 block text-right">{msg.timestamp}</span>}
                 </div>
               </div>
@@ -242,12 +242,13 @@ function Chat() {
           )}
 
           {isLoading && (
-            <div className="flex gap-4 items-center pb-8">
-              <div className="w-10 h-10 rounded-full bg-primary-container flex-shrink-0 flex items-center justify-center">
-                <span className="material-symbols-outlined text-on-primary-container text-md" style={{ fontVariationSettings: "'FILL' 1" }}>spa</span>
+            <div className="flex gap-2.5 sm:gap-4 items-center pb-6 animate-fade-in">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-primary-container flex-shrink-0 flex items-center justify-center">
+                <span className="material-symbols-outlined text-on-primary-container text-sm sm:text-md" style={{ fontVariationSettings: "'FILL' 1" }}>spa</span>
               </div>
-              <div className="bg-surface-container-lowest border border-outline-variant/30 px-6 py-4 rounded-full shadow-sm text-xs font-semibold text-on-surface-variant animate-pulse">
-                MindEase is writing a thoughtful reply...
+              <div className="bg-surface-container-lowest border border-outline-variant/30 px-4 py-2.5 sm:px-6 sm:py-3.5 rounded-full shadow-sm text-xs font-semibold text-on-surface-variant animate-pulse flex items-center gap-2">
+                <span className="dot-flashing inline-block" />
+                <span className="ml-2">MindEase is writing a thoughtful reply...</span>
               </div>
             </div>
           )}

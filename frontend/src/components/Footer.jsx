@@ -18,7 +18,7 @@ const Footer = () => {
             mental health journey with technology and empathy.
           </p>
 
-          <p className="mt-8 text-error font-bold uppercase text-sm leading-6">
+          <p className="mt-3 text-error font-bold uppercase text-sm leading-6">
             Emergency: If you are in crisis, please contact emergency
             services or a suicide prevention hotline immediately.
           </p>
@@ -68,7 +68,7 @@ const Footer = () => {
               Legal
             </h3>
 
-            <ul className="space-y-5 text-on-surface-variant">
+            <ul className="space-y-3 text-on-surface-variant">
               <li>
                 <Link
                   to="/privacy"

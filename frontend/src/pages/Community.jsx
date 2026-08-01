@@ -12,7 +12,7 @@ function Community() {
 
   const [activeTag, setActiveTag] = useState('All Topics');
   const [searchQuery, setSearchQuery] = useState('');
-  
+
   // New post modal state
   const [showPostModal, setShowPostModal] = useState(false);
   const [newTitle, setNewTitle] = useState('');
@@ -73,7 +73,7 @@ function Community() {
       {/* Page Scrollable Area */}
       <div className="flex-1 overflow-y-auto min-h-0 flex flex-col">
         <div className="max-w-[1200px] w-full mx-auto px-margin-mobile md:px-margin-desktop py-lg space-y-xl flex-grow">
-          
+
           {/* Welcome & Create Post Hero Banner */}
           <section className="bg-primary-container text-on-primary-container rounded-[2rem] p-8 md:p-12 relative overflow-hidden flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
             <div className="relative z-10 max-w-2xl">
@@ -99,11 +99,10 @@ function Community() {
                   <button
                     key={t}
                     onClick={() => setActiveTag(t)}
-                    className={`px-5 py-2 rounded-full text-xs font-bold transition-all ${
-                      activeTag === t
-                        ? 'bg-primary text-white shadow'
-                        : 'bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest'
-                    }`}
+                    className={`px-5 py-2 rounded-full text-xs font-bold transition-all ${activeTag === t
+                      ? 'bg-primary text-white shadow'
+                      : 'bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest'
+                      }`}
                   >
                     {t}
                   </button>
@@ -148,9 +147,8 @@ function Community() {
                   <div className="flex items-center justify-between border-t border-outline-variant/10 pt-4 text-xs font-semibold text-on-surface-variant">
                     <button
                       onClick={() => toggleLikePost(post.id)}
-                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full transition ${
-                        post.isLiked ? 'bg-rose-500/10 text-rose-600 font-bold' : 'hover:bg-surface-container-high'
-                      }`}
+                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full transition ${post.isLiked ? 'bg-rose-500/10 text-rose-600 font-bold' : 'hover:bg-surface-container-high'
+                        }`}
                     >
                       <span className="material-symbols-outlined text-base" style={{ fontVariationSettings: post.isLiked ? "'FILL' 1" : "'FILL' 0" }}>
                         favorite
@@ -215,7 +213,7 @@ function Community() {
       {/* Create Discussion Modal */}
       {showPostModal && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-surface-container-lowest max-w-lg w-full rounded-3xl p-6 shadow-2xl space-y-4">
+          <div className="bg-surface-container-lowest max-w-2xl w-full rounded-3xl p-6 shadow-2xl space-y-4">
             <div className="flex justify-between items-center">
               <h3 className="font-headline-md font-bold text-on-surface text-lg">Create Community Discussion</h3>
               <button onClick={() => setShowPostModal(false)} className="p-1 text-on-surface-variant hover:text-primary">
