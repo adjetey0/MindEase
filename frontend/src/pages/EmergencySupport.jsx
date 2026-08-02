@@ -80,21 +80,21 @@ function EmergencySupport() {
             {/* Primary Action Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <a
-                href="tel:988"
+                href="tel:0800678678"
                 className="group flex flex-col items-center justify-center p-10 rounded-[2rem] bg-error text-white shadow-xl hover:shadow-2xl transition-all duration-300"
               >
                 <span className="material-symbols-outlined text-5xl mb-3" style={{ fontVariationSettings: "'FILL' 1" }}>emergency_share</span>
-                <span className="font-headline-md text-2xl font-bold">Call 988 Crisis Lifeline</span>
-                <span className="text-xs mt-2 opacity-90">Free, confidential 24/7 hotline (US/Canada)</span>
+                <span className="font-headline-md text-2xl font-bold">Call 0800 678 678</span>
+                <span className="text-xs mt-2 opacity-90">Ghana Mental Health Authority — free, confidential, 24/7</span>
               </a>
 
               <a
-                href="sms:741741?body=HOME"
+                href="tel:193"
                 className="group flex flex-col items-center justify-center p-10 rounded-[2rem] bg-primary text-white shadow-xl hover:shadow-2xl transition-all duration-300"
               >
-                <span className="material-symbols-outlined text-5xl mb-3" style={{ fontVariationSettings: "'FILL' 1" }}>chat</span>
-                <span className="font-headline-md text-2xl font-bold">Text HOME to 741741</span>
-                <span className="text-xs mt-2 opacity-90">Free 24/7 crisis text line support</span>
+                <span className="material-symbols-outlined text-5xl mb-3" style={{ fontVariationSettings: "'FILL' 1" }}>local_police</span>
+                <span className="font-headline-md text-2xl font-bold">Call 193 — Emergency Services</span>
+                <span className="text-xs mt-2 opacity-90">Police, ambulance, or fire — immediate danger</span>
               </a>
             </div>
           </section>
@@ -238,7 +238,7 @@ function EmergencySupport() {
                 <label className="block text-xs font-bold text-on-surface-variant mb-1">Phone Number</label>
                 <input
                   type="tel"
-                  placeholder="+1 (555) 000-0000"
+                  placeholder="+233 24 000 0000"
                   value={contactPhone}
                   onChange={(e) => setContactPhone(e.target.value)}
                   required

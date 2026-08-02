@@ -5,16 +5,17 @@ CRISIS_RESPONSE = {
     "en": (
         "I'm really concerned about what you just shared. You don't have to go through this alone. "
         "Please reach out to a mental health professional or call a crisis line right away.\n\n"
-        "🇬🇭 Ghana Mental Health Helpline: 0800 111 222 (free, 24/7)\n"
+        "🇬🇭 Ghana Mental Health Authority: 0800 678 678 (free, 24/7)\n"
+        "🚨 Emergency Services (Police/Ambulance/Fire): 193\n"
         "💙 You matter. Help is available."
     ),
     "tw": (
         "Me hu w'asem no mu na mehia wo. Ennhyɛ wo ho nnidi. "
-        "Yɛ frɛ obiara a ɔtumi boa wo: 0800 111 222"
+        "Yɛ frɛ obiara a ɔtumi boa wo: 0800 678 678"
     ),
     "fr": (
         "Je suis vraiment préoccupé par ce que vous venez de partager. "
-        "Vous n'êtes pas seul(e). Appelez le: 0800 111 222"
+        "Vous n'êtes pas seul(e). Appelez le: 0800 678 678"
     )
 }
 

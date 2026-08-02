@@ -1,7 +1,7 @@
 from models import get_db
 from services.emotion_service import detect_emotion
 from services.crisis_service  import is_crisis, get_crisis_response
-from services.coping_service  import format_bot_message
+from services.ai_response_service import generate_ai_response
 from datetime import datetime
 import json
 import uuid
@@ -11,8 +11,8 @@ def handle_message(session_id: str, user_text: str, language: str = "en") -> dic
     """
     Core chat pipeline:
     1. Detect emotion
-    2. Check for crisis
-    3. Generate bot response
+    2. Check for crisis  <-- hard gate, always runs, never skipped
+    3. Generate bot response (real AI, unless crisis -> fixed safety response)
     4. Save both messages
     5. Return full response payload
     """
@@ -26,9 +26,12 @@ def handle_message(session_id: str, user_text: str, language: str = "en") -> dic
 
     # 2. Generate bot reply
     if crisis:
+        # Crisis responses are ALWAYS the fixed, pre-written safety message —
+        # never routed through the AI model. This must never change.
         bot_text = get_crisis_response(language)
     else:
-        bot_text = format_bot_message(emotion)
+        history  = get_chat_history(session_id, limit=10)
+        bot_text = generate_ai_response(user_text, emotion, history)
 
     # 3. Save user message
     user_msg = {

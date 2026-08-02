@@ -225,10 +225,12 @@ const initialDefaultData = {
     { id: 2, name: 'David Morgan', phone: '+1 (555) 876-5432', relation: 'Brother / Next of Kin' }
   ],
   hotlines: [
-    { id: 1, country: 'United States & Canada', name: '988 Suicide & Crisis Lifeline', number: '988', text: 'Call or text 988 (Available 24/7, free & confidential)', category: 'National' },
-    { id: 2, country: 'United States', name: 'Crisis Text Line', number: '741741', text: 'Text HOME to 741741 to connect with a crisis counselor', category: 'Text Support' },
-    { id: 3, country: 'United Kingdom', name: 'Samaritans UK', number: '116 123', text: 'Call 116 123 (Free 24/7 support)', category: 'National' },
-    { id: 4, country: 'International', name: 'Befrienders Worldwide', number: 'befrienders.org', text: 'Find support services in over 40 countries', category: 'Global' }
+    { id: 1, country: 'Ghana', name: 'Mental Health Authority Psychosocial Line', number: '0800678678', text: 'Call 0800 678 678 (Free, 24/7, official Ghana Mental Health Authority line)', category: 'National' },
+    { id: 2, country: 'Ghana', name: 'Emergency Services (Police, Ambulance, Fire)', number: '193', text: 'Call 193 for any immediate emergency in Ghana', category: 'Emergency' },
+    { id: 3, country: 'United States & Canada', name: '988 Suicide & Crisis Lifeline', number: '988', text: 'Call or text 988 (Available 24/7, free & confidential)', category: 'National' },
+    { id: 4, country: 'United States', name: 'Crisis Text Line', number: '741741', text: 'Text HOME to 741741 to connect with a crisis counselor', category: 'Text Support' },
+    { id: 5, country: 'United Kingdom', name: 'Samaritans UK', number: '116 123', text: 'Call 116 123 (Free 24/7 support)', category: 'National' },
+    { id: 6, country: 'International', name: 'Find A Helpline', number: 'findahelpline.com', text: 'Verified directory of crisis helplines in 130+ countries', category: 'Global' }
   ],
   faqs: [
     { id: 1, question: 'Is MindEase free to use?', answer: 'Yes! MindEase offers free access to core AI chat support, daily mood tracking, community forums, and self-guided mindfulness tools. Premium plans unlock unlimited video sessions and 1-on-1 specialist calls.', category: 'General' },

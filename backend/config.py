@@ -28,6 +28,10 @@ class Config:
     PROFESSIONAL_UPLOAD_FOLDER = os.path.join(os.path.abspath(os.path.dirname(__file__)), "uploads", "professional_credentials")
     MAX_CONTENT_LENGTH = 10 * 1024 * 1024  # 10MB max upload size
 
+    # --- AI chat responses (OpenRouter) ---
+    OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
+    OPENROUTER_MODEL   = os.getenv("OPENROUTER_MODEL", "meta-llama/llama-3.3-70b-instruct:free")
+
 
 class DevelopmentConfig(Config):
     DEBUG = True
