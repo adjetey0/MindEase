@@ -76,6 +76,16 @@ function LandingPage() {
               </Link>
             </div>
 
+            {/* Hero Image */}
+            <div className="relative w-full aspect-video md:aspect-[21/9] rounded-3xl overflow-hidden shadow-2xl border border-outline-variant/20 mb-14">
+              <img
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDCjfJPs0HUmTaq5TRpk7pzjKQ2Jml2OUhJfnZK2di54KAAC1c8RhyTc2IBIi6ygcUVtGdNfoMDikZaZTQPymi7TSk2lWtNu9uFfwcb3vkxALRjR80QWANmXCLfdCZf4Kkq4Yg8b5XCPLho2pIbxSwVTvELWsfddJSlI7Ufbn6ycyqDKYvT8Evge_xnXJmpex71-LEaiLN1I4IDHrmLzx8kK1zjnIkwIbvyah7mAgfgXnajzKSc-p5fOwoOxTwB04PfSGpKEdPEuwO1"
+                alt="A serene and minimalist zen garden at dawn with soft pastel blues and lavenders evoking mental clarity"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent" />
+            </div>
+
             {/* Dynamic Stats Banner */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 w-full max-w-4xl p-6 bg-surface-container-lowest rounded-3xl border border-outline-variant/20 shadow-md">
               {landingStats.map((st) => (

@@ -26,6 +26,7 @@ function App() {
       <Route path="/learn-more" element={<LearnMore />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
+      <Route path="/assessment" element={<Assessment />} />
       <Route path="/staff-application-kn74x" element={<ProfessionalSignup />} />
       <Route path="/staff-portal-x7k9d" element={<ProfessionalLogin />} />
       <Route path="/control-panel-q92j" element={<AdminDashboard />} />
@@ -39,7 +40,6 @@ function App() {
         <Route path="/emergency" element={<EmergencySupport />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/help" element={<Help />} />
-        <Route path="/assessment" element={<Assessment />} />
       </Route>
     </Routes>
   );
