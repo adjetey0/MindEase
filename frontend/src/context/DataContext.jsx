@@ -3,15 +3,15 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 const STORAGE_KEY = 'mindease_app_data_v1';
 
 const initialDefaultData = {
-  isLoggedIn: true,
+  isLoggedIn: false,
   profile: {
-    name: 'Alex Morgan',
-    email: 'alex.morgan@example.com',
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
-    bio: 'Mindfulness seeker & daily meditator. On a journey to stress reduction and emotional balance.',
-    streak: 14,
-    totalSessions: 32,
-    completedProgramsCount: 2,
+    name: '',
+    email: '',
+    avatar: '',
+    bio: '',
+    streak: 0,
+    totalSessions: 0,
+    completedProgramsCount: 0,
     badges: [
       { id: 1, name: '7-Day Streak', icon: 'local_fire_department', color: 'text-amber-500 bg-amber-500/10' },
       { id: 2, name: 'Mindfulness Starter', icon: 'spa', color: 'text-emerald-500 bg-emerald-500/10' },

@@ -23,14 +23,33 @@ import Assessment from './pages/Assessment';
 function App() {
   return (
     <Routes>
+      {/* Public — no login required */}
       <Route path="/" element={<LandingPage />} />
-      <Route path="/learn-more" element={<LearnMore />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
-      <Route path="/assessment" element={<Assessment />} />
+
+      {/* Professional / Admin — separate login system, untouched */}
       <Route path="/staff-application-kn74x" element={<ProfessionalSignup />} />
       <Route path="/staff-portal-x7k9d" element={<ProfessionalLogin />} />
       <Route path="/control-panel-q92j" element={<AdminDashboard />} />
+
+      {/* Everything below requires a logged-in regular user */}
+      <Route
+        path="/learn-more"
+        element={
+          <ProtectedRoute>
+            <LearnMore />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/assessment"
+        element={
+          <ProtectedRoute>
+            <Assessment />
+          </ProtectedRoute>
+        }
+      />
       <Route
         element={
           <ProtectedRoute>

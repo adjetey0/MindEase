@@ -5,7 +5,7 @@ import axios from 'axios';
 
 function Login() {
   const navigate = useNavigate();
-  const { updateProfile } = useData();
+  const { updateProfile, signIn } = useData();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -30,6 +30,7 @@ function Login() {
         email: res.data.user.email,
         name: res.data.user.full_name || email.split('@')[0]
       });
+      signIn();
       navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.error || 'Login failed. Please try again.');
