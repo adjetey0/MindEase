@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Footer from '../components/Footer';
 import { useLayout } from '../components/Layout';
 import { useData } from '../context/DataContext';
 
@@ -103,7 +102,7 @@ function Dashboard() {
             </div>
           </div>
 
-          {/* ─── Daily Streak Chart ─────────────────────────────── */}
+          {/* Daily Streak Chart */}
           <div className="bg-surface-container-lowest rounded-[2rem] p-md border border-outline-variant/10 card-shadow">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
               <div>
@@ -132,13 +131,10 @@ function Dashboard() {
                 'Okay': { height: 55, color: 'bg-slate-400', emoji: '😐' },
               };
               const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
-              // Get the last 14 mood logs (most recent first from DataContext), reverse for left-to-right chronological
               const chartLogs = [...moodLogs].slice(0, 14).reverse();
 
               return (
                 <div className="space-y-4">
-                  {/* Chart Bars */}
                   <div className="flex items-end gap-1.5 sm:gap-2 h-40 sm:h-48 px-2">
                     {chartLogs.map((log, i) => {
                       const meta = emotionMap[log.emotion] || { height: 50, color: 'bg-primary', emoji: '🙂' };
@@ -148,22 +144,15 @@ function Dashboard() {
 
                       return (
                         <div key={log.id || i} className="flex-1 flex flex-col items-center gap-1 group relative">
-                          {/* Tooltip on hover */}
                           <div className="absolute -top-14 left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface px-3 py-1.5 rounded-lg text-[10px] font-semibold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 shadow-lg">
                             {log.emotion} • {log.date}
                             {log.note && <span className="block text-[9px] opacity-70 mt-0.5">"{log.note}"</span>}
                           </div>
-                          {/* Emoji on top */}
                           <span className="text-sm sm:text-base opacity-0 group-hover:opacity-100 transition-opacity">{meta.emoji}</span>
-                          {/* Bar */}
                           <div
                             className={`w-full rounded-t-lg ${meta.color} transition-all duration-500 hover:opacity-80 cursor-pointer min-w-[14px]`}
-                            style={{
-                              height: `${meta.height}%`,
-                              animationDelay: `${i * 60}ms`,
-                            }}
+                            style={{ height: `${meta.height}%`, animationDelay: `${i * 60}ms` }}
                           />
-                          {/* Day label */}
                           <span className="text-[9px] sm:text-[10px] text-on-surface-variant font-semibold">{dayLabel}</span>
                           <span className="text-[8px] text-outline hidden sm:block">{dateLabel}</span>
                         </div>
@@ -171,7 +160,6 @@ function Dashboard() {
                     })}
                   </div>
 
-                  {/* Legend */}
                   <div className="flex flex-wrap gap-3 pt-2 border-t border-outline-variant/10 justify-center">
                     {Object.entries(emotionMap).slice(0, 6).map(([label, meta]) => (
                       <div key={label} className="flex items-center gap-1.5">
@@ -184,9 +172,9 @@ function Dashboard() {
               );
             })()}
           </div>
+
           {/* Bento Grid Summary */}
           <div className="grid grid-cols-1 md:grid-cols-12 gap-gutter">
-            {/* Active Programs Progress */}
             <div className="md:col-span-8 bg-surface-container-lowest rounded-[2rem] p-md border border-outline-variant/10 card-shadow flex flex-col justify-between">
               <div className="flex justify-between items-center mb-4">
                 <div>
@@ -230,7 +218,6 @@ function Dashboard() {
               )}
             </div>
 
-            {/* Wellness Stats */}
             <div className="md:col-span-4 flex flex-col gap-gutter">
               <div className="flex-1 bg-secondary-container/20 rounded-[2rem] p-md border border-secondary/10 flex flex-col items-center justify-center text-center">
                 <div className="w-16 h-16 bg-secondary-container text-on-secondary-container rounded-2xl flex items-center justify-center mb-4">
@@ -315,7 +302,6 @@ function Dashboard() {
           )}
 
         </div>
-        <Footer />
       </div>
 
       {/* FAB (Mobile only for Quick Chat) */}
