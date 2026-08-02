@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout';
 import LandingPage from './pages/LandingPage';
 import Dashboard from './pages/Dashboard';
@@ -19,9 +19,19 @@ import Settings from './pages/Settings';
 import Help from './pages/Help';
 import Assessment from './pages/Assessment';
 
+// ── Protected Route Guard
+function ProtectedRoute({ children }) {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    return <Navigate to="/login" replace />;
+  }
+  return children;
+}
+
 function App() {
   return (
     <Routes>
+      {/* ── Public Routes ── */}
       <Route path="/" element={<LandingPage />} />
       <Route path="/learn-more" element={<LearnMore />} />
       <Route path="/login" element={<Login />} />
@@ -30,7 +40,13 @@ function App() {
       <Route path="/staff-application-kn74x" element={<ProfessionalSignup />} />
       <Route path="/staff-portal-x7k9d" element={<ProfessionalLogin />} />
       <Route path="/control-panel-q92j" element={<AdminDashboard />} />
-      <Route element={<Layout />}>
+
+      {/* ── Protected Routes ── */}
+      <Route element={
+        <ProtectedRoute>
+          <Layout />
+        </ProtectedRoute>
+      }>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/chat" element={<Chat />} />
         <Route path="/programs" element={<Programs />} />
@@ -44,6 +60,5 @@ function App() {
     </Routes>
   );
 }
-
 
 export default App;
