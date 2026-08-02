@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useData } from '../context/DataContext';
+import axios from 'axios';
 
 function Login() {
   const navigate = useNavigate();
@@ -10,18 +11,31 @@ function Login() {
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (email) {
-      const extractedName = email.split('@')[0].replace('.', ' ');
-      const capitalizedName = extractedName.charAt(0).toUpperCase() + extractedName.slice(1);
-      updateProfile({
+    setLoading(true);
+    setError('');
+    try {
+      const res = await axios.post('http://localhost:5000/api/auth/login', {
         email,
-        name: capitalizedName || 'User'
+        password,
+        remember_me: rememberMe
       });
+      localStorage.setItem('token', res.data.token);
+      localStorage.setItem('user', JSON.stringify(res.data.user));
+      updateProfile({
+        email: res.data.user.email,
+        name: res.data.user.full_name || email.split('@')[0]
+      });
+      navigate('/dashboard');
+    } catch (err) {
+      setError(err.response?.data?.error || 'Login failed. Please try again.');
+    } finally {
+      setLoading(false);
     }
-    navigate('/dashboard');
   };
 
   return (
@@ -71,6 +85,12 @@ function Login() {
             <h1 className="text-3xl font-bold text-on-surface tracking-tight">Welcome back 👋</h1>
             <p className="text-on-surface-variant text-sm">Enter your credentials to access your dashboard.</p>
           </div>
+
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl px-4 py-3">
+              {error}
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-1.5">
@@ -133,10 +153,17 @@ function Login() {
 
             <button
               type="submit"
-              className="w-full bg-primary text-white py-3.5 rounded-xl text-sm font-semibold hover:bg-primary/90 active:scale-98 transition-all duration-150 shadow-lg shadow-primary/20 mt-2 flex items-center justify-center gap-2"
+              disabled={loading}
+              className="w-full bg-primary text-white py-3.5 rounded-xl text-sm font-semibold hover:bg-primary/90 active:scale-98 transition-all duration-150 shadow-lg shadow-primary/20 mt-2 flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              <span>Sign In</span>
-              <span className="material-symbols-outlined text-base">arrow_forward</span>
+              {loading ? (
+                <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              ) : (
+                <>
+                  <span>Sign In</span>
+                  <span className="material-symbols-outlined text-base">arrow_forward</span>
+                </>
+              )}
             </button>
           </form>
 
