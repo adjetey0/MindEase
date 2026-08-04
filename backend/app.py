@@ -62,4 +62,4 @@ def create_app(env: str = "default") -> Flask:
 if __name__ == "__main__":
     env = os.getenv("FLASK_ENV", "development")
     app = create_app(env)
-    socketio.run(app, debug=app.config["DEBUG"], port=5000)
+    socketio.run(app, debug=app.config["DEBUG"], port=5000, host='0.0.0.0')
