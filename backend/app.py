@@ -5,6 +5,7 @@ from flask_jwt_extended import JWTManager
 from config import config
 from models import mongo
 import os
+import certifi
 
 socketio = SocketIO()
 jwt      = JWTManager()
@@ -14,7 +15,7 @@ def create_app(env: str = "default") -> Flask:
 
     app.config.from_object(config[env])
 
-    mongo.init_app(app)
+    mongo.init_app(app, tlsCAFile=certifi.where())
     jwt.init_app(app)
     CORS(app, origins="*", supports_credentials=True)
     socketio.init_app(app,

@@ -2,8 +2,9 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useLayout } from '../components/Layout';
 import CallModal from "../components/Chat/CallModal";
+import API_BASE from '../utils/api';
 
-const API_BASE = 'http://localhost:5000/api/chat';
+const CHAT_API_BASE = `${API_BASE}/api/chat`;
 
 // Generate or retrieve a persistent session ID using localStorage
 function getSessionId() {
@@ -58,7 +59,7 @@ function Chat() {
   useEffect(() => {
     const loadHistory = async () => {
       try {
-        const res = await fetch(`${API_BASE}/history/${sessionId.current}`);
+        const res = await fetch(`${CHAT_API_BASE}/history/${sessionId.current}`);
         const data = await res.json();
         if (data.messages && data.messages.length > 0) {
           const loaded = data.messages.map((msg) => ({
@@ -138,7 +139,7 @@ function Chat() {
     setIsLoading(true);
 
     try {
-      const res = await fetch(`${API_BASE}/message`, {
+      const res = await fetch(`${CHAT_API_BASE}/message`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -614,4 +615,4 @@ function Chat() {
   );
 }
 
-export default Chat;""
+export default Chat;

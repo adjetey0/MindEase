@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useData } from '../context/DataContext';
+import axios from 'axios';
+import API_BASE from '../utils/api';
 
 function Signup() {
   const navigate = useNavigate();
@@ -12,9 +14,19 @@ function Signup() {
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!agreeTerms) return;
+
+    try {
+      await axios.post(`${API_BASE}/api/auth/signup`, {
+        name,
+        email,
+        password
+      });
+    } catch (error) {
+      console.error("Signup error:", error);
+    }
 
     updateProfile({
       name: name || 'New User',
