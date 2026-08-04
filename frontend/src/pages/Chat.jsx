@@ -355,9 +355,12 @@ function Chat() {
 
       {/* ── Chat History Slide-Over Drawer ────────────────────────── */}
       {showHistory && (
-        <div className="absolute inset-0 z-40 flex justify-end">
+        <div className="fixed inset-0 z-40">
           <div className="fixed inset-0 bg-black/30 backdrop-blur-xs" onClick={() => setShowHistory(false)} />
-          <div className="relative w-full max-w-sm bg-surface h-full border-l border-outline-variant/30 shadow-2xl z-10 p-6 flex flex-col justify-between animate-slide-up">
+          <div
+            className="fixed inset-y-0 right-0 bg-surface border-l border-outline-variant/30 shadow-2xl z-10 p-6 flex flex-col justify-between animate-slide-up overflow-y-auto"
+            style={{ width: '100%', maxWidth: '384px' }}
+          >
             <div className="space-y-6">
               <div className="flex justify-between items-center pb-4 border-b border-outline-variant/20">
                 <div className="flex items-center gap-2 text-primary font-bold text-lg">
