@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { io } from 'socket.io-client';
 import { useWebRTC } from '../../hooks/useWebRTC';
+import API_BASE from '../../utils/api';
 
-const SOCKET_URL = 'http://localhost:5000';
+const SOCKET_URL = API_BASE;
 
 function CallModal({ onClose, sessionId }) {
   const socketRef      = useRef(null);
@@ -30,16 +31,16 @@ function CallModal({ onClose, sessionId }) {
   // ── Connect to socket & check volunteers ───────────────
   useEffect(() => {
     // Check available volunteers
-    fetch('http://localhost:5000/api/call/volunteers/available')
+    fetch(`${API_BASE}/api/call/volunteers/available`)
       .then((r) => r.json())
       .then((d) => setAvailable(d.available))
       .catch(() => setAvailable(0));
 
     // Connect socket
-    const socket = io(SOCKET_URL, { 
-  transports: ['polling', 'websocket'],
-  upgrade: true
-});
+    const socket = io(SOCKET_URL, {
+      transports: ['polling', 'websocket'],
+      upgrade: true
+    });
     socketRef.current = socket;
 
     // Socket event listeners
@@ -197,17 +198,13 @@ function CallModal({ onClose, sessionId }) {
           {/* ── Connected State (Video Call) ── */}
           {callStatus === 'connected' && (
             <div className="space-y-4">
-              {/* Video area */}
               <div className="relative bg-black rounded-2xl overflow-hidden aspect-video">
-                {/* Remote video (volunteer) */}
                 <video
                   ref={remoteVideoRef}
                   autoPlay
                   playsInline
                   className="w-full h-full object-cover"
                 />
-
-                {/* Local video (user - small overlay) */}
                 <div className="absolute bottom-4 right-4 w-32 h-24 bg-black rounded-xl overflow-hidden border-2 border-white/20 shadow-lg">
                   <video
                     ref={localVideoRef}
@@ -222,15 +219,12 @@ function CallModal({ onClose, sessionId }) {
                     </div>
                   )}
                 </div>
-
-                {/* Call duration indicator */}
                 <div className="absolute top-4 left-4 bg-black/50 text-white text-xs px-3 py-1 rounded-full flex items-center gap-1">
                   <span className="w-2 h-2 rounded-full bg-secondary animate-pulse" />
                   Connected
                 </div>
               </div>
 
-              {/* Call controls */}
               <div className="flex items-center justify-center gap-4">
                 <button
                   onClick={toggleMute}

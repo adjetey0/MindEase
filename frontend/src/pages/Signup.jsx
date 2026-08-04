@@ -19,7 +19,11 @@ function Signup() {
     if (!agreeTerms) return;
 
     try {
-      await axios.post(`${API_BASE}/api/auth/signup`, {
+      await axios.post(`${API_BASE}/api/auth/register`, {
+  email,
+  password,
+  full_name: name
+});
         name,
         email,
         password
