@@ -6,38 +6,46 @@ import API_BASE from '../utils/api';
 
 function Signup() {
   const navigate = useNavigate();
-  const { updateProfile } = useData();
+  const { updateProfile, signIn } = useData();
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!agreeTerms) return;
 
+    setLoading(true);
+    setError('');
+
     try {
-      await axios.post(`${API_BASE}/api/auth/register`, {
-  email,
-  password,
-  full_name: name
-});
-        name,
+      const res = await axios.post(`${API_BASE}/api/auth/register`, {
         email,
-        password
+        password,
+        full_name: name
       });
-    } catch (error) {
-      console.error("Signup error:", error);
+
+      localStorage.setItem('token', res.data.token);
+      localStorage.setItem('user', JSON.stringify(res.data.user));
+
+      updateProfile({
+        name: res.data.user.full_name || name || 'New User',
+        email: res.data.user.email || email
+      });
+
+      signIn();
+      navigate('/dashboard');
+    } catch (err) {
+      console.error('Signup error:', err);
+      setError(err.response?.data?.error || 'Signup failed. Please try again.');
+    } finally {
+      setLoading(false);
     }
-
-    updateProfile({
-      name: name || 'New User',
-      email: email || 'user@mindease.care'
-    });
-
-    navigate('/dashboard');
   };
 
   return (
@@ -87,6 +95,12 @@ function Signup() {
             <h1 className="text-3xl font-bold text-on-surface tracking-tight">Create your account ✨</h1>
             <p className="text-on-surface-variant text-sm">Free access to core mental wellness tools.</p>
           </div>
+
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl px-4 py-3">
+              {error}
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-1.5">
@@ -161,10 +175,17 @@ function Signup() {
 
             <button
               type="submit"
-              className="w-full bg-primary text-white py-3.5 rounded-xl text-sm font-semibold hover:bg-primary/90 active:scale-98 transition-all shadow-lg shadow-primary/20 mt-2 flex items-center justify-center gap-2"
+              disabled={loading}
+              className="w-full bg-primary text-white py-3.5 rounded-xl text-sm font-semibold hover:bg-primary/90 active:scale-98 transition-all shadow-lg shadow-primary/20 mt-2 flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              <span>Create Free Account</span>
-              <span className="material-symbols-outlined text-base">arrow_forward</span>
+              {loading ? (
+                <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              ) : (
+                <>
+                  <span>Create Free Account</span>
+                  <span className="material-symbols-outlined text-base">arrow_forward</span>
+                </>
+              )}
             </button>
           </form>
 
