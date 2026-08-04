@@ -397,7 +397,7 @@ function Chat() {
             </div>
 
             <div className="pt-4 border-t border-outline-variant/20 text-center">
-              <p className="text-[11px] text-on-surface-variant">Sessions are encrypted & stored under HIPAA guidelines.</p>
+              <p className="text-[11px] text-on-surface-variant">Your sessions are saved privately to your account.</p>
             </div>
           </div>
         </div>
@@ -599,7 +599,7 @@ function Chat() {
           </form>
           <p className="text-center text-[10px] text-outline mt-3 px-12">
             MindEase AI provides emotional support but is not a replacement for clinical therapy.
-            In case of a crisis, please use the <span className="text-error font-bold">Emergency Support</span> button.
+            Your conversations are private and securely stored.
           </p>
         </div>
       </div>
