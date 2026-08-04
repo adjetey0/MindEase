@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { io } from 'socket.io-client';
+import API_BASE from '../utils/api';
 
-// Change these if your Flask backend runs somewhere other than localhost:5000
-const API_BASE_URL = 'http://localhost:5000';
-const SOCKET_URL = 'http://localhost:5000';
+const API_BASE_URL = API_BASE;
+const SOCKET_URL = API_BASE;
 
 function ProfessionalLogin() {
   const [email, setEmail] = useState('');

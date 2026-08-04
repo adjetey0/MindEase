@@ -48,7 +48,7 @@ function Sidebar() {
       </div>
 
       {/* Main Navigation Items */}
-      <nav className="flex-1 space-y-1.5 overflow-y-auto custom-scrollbar w-full">
+      <nav className="flex-1 min-h-0 space-y-1.5 overflow-y-auto custom-scrollbar w-full">
         {navItems.map((item) => (
           <NavLink
             key={item.name}

@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
+import API_BASE from '../utils/api';
 
-// Change this if your Flask backend runs somewhere other than localhost:5000
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = API_BASE;
 
 function AdminDashboard() {
   const [email, setEmail] = useState('');

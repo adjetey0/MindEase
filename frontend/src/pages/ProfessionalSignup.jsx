@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import API_BASE from '../utils/api';
 
-// Change this if your Flask backend runs somewhere other than localhost:5000
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = API_BASE;
 
 const CREDENTIAL_TYPES = [
   'Licensed Clinical Psychologist',
