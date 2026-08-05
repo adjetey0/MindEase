@@ -142,12 +142,15 @@ function Assessment() {
 
       {/* Main Content Scrollable Viewport */}
       <div className="flex-1 overflow-y-auto min-h-0 flex flex-col custom-scrollbar relative">
-        <div className="max-w-[1280px] w-full mx-auto px-margin-mobile md:px-margin-desktop py-8 sm:py-12 flex-grow">
+        <div
+          className="w-full mx-auto px-margin-mobile md:px-margin-desktop py-8 sm:py-12 flex-grow"
+          style={{ maxWidth: '1280px' }}
+        >
 
           {!isCompleted ? (
             <>
               {/* Progress Bar Header */}
-              <div className="max-w-[720px] mx-auto mb-8 sm:mb-12 space-y-3">
+              <div className="mx-auto mb-8 sm:mb-12 space-y-3" style={{ maxWidth: '720px' }}>
                 <div className="flex justify-between items-center">
                   <span className="text-label-md font-bold text-primary flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
@@ -167,7 +170,10 @@ function Assessment() {
 
               {/* Assessment Question Card */}
               <div className="flex flex-col lg:flex-row gap-8 items-start justify-center">
-                <div className="w-full lg:max-w-[720px] glass-panel rounded-[2rem] p-6 sm:p-10 card-shadow border border-outline-variant/30 space-y-8">
+                <div
+                  className="w-full glass-panel rounded-[2rem] p-6 sm:p-10 card-shadow border border-outline-variant/30 space-y-8"
+                  style={{ maxWidth: '720px' }}
+                >
                   <div className="text-center md:text-left space-y-3">
                     <span className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-secondary-container text-on-secondary-container shadow-sm">
                       <span className="material-symbols-outlined text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>
@@ -252,14 +258,17 @@ function Assessment() {
             </>
           ) : (
             /* Results Screen */
-            <div className="max-w-[840px] mx-auto glass-panel rounded-[2.5rem] p-8 md:p-14 shadow-2xl border border-outline-variant/30 text-center space-y-8">
+            <div
+              className="mx-auto glass-panel rounded-[2.5rem] p-8 md:p-14 shadow-2xl border border-outline-variant/30 text-center space-y-8"
+              style={{ maxWidth: '840px' }}
+            >
               <div className="w-20 h-20 rounded-full bg-emerald-500/10 text-emerald-600 flex items-center justify-center mx-auto shadow-lg">
                 <span className="material-symbols-outlined text-4xl" style={{ fontVariationSettings: "'FILL' 1" }}>
                   task_alt
                 </span>
               </div>
 
-              <div className="space-y-3 max-w-xl mx-auto">
+              <div className="mx-auto space-y-3" style={{ maxWidth: '576px' }}>
                 <span className="px-4 py-1.5 bg-emerald-500/10 text-emerald-600 rounded-full text-xs font-bold uppercase tracking-wider border border-emerald-500/20">
                   Assessment Saved to Profile
                 </span>
