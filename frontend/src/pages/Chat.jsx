@@ -6,6 +6,12 @@ import API_BASE from '../utils/api';
 
 const CHAT_API_BASE = `${API_BASE}/api/chat`;
 
+// Every chat endpoint now requires the user's login token
+function authHeaders() {
+  const token = localStorage.getItem('token');
+  return token ? { Authorization: `Bearer ${token}` } : {};
+}
+
 // Generate or retrieve a persistent session ID using localStorage
 function getSessionId() {
   let id = localStorage.getItem('mindease_session_id');
@@ -43,12 +49,10 @@ function Chat() {
   const [aiTone, setAiTone] = useState('Empathetic');
   const [toastMsg, setToastMsg] = useState(null);
 
-  // Mock list of past session logs
-  const [sessionLogs, setSessionLogs] = useState([
-    { id: 'sess_today', title: "Today's Check-in", date: 'Today, 2:30 PM', preview: 'Feeling calm and productive...' },
-    { id: 'sess_yesterday', title: 'Desk Decompression', date: 'Yesterday, 8:15 PM', preview: 'Guided breathing exercise completed...' },
-    { id: 'sess_july20', title: 'CBT Reflection on Stress', date: 'July 20, 2026', preview: 'Discussed workplace stress...' },
-  ]);
+  // Real session list, fetched from the backend when the drawer opens
+  const [sessionLogs, setSessionLogs] = useState([]);
+  const [sessionsLoading, setSessionsLoading] = useState(false);
+  const [loadingSessionId, setLoadingSessionId] = useState(null);
 
   const showToast = (msg) => {
     setToastMsg(msg);
@@ -59,7 +63,9 @@ function Chat() {
   useEffect(() => {
     const loadHistory = async () => {
       try {
-        const res = await fetch(`${CHAT_API_BASE}/history/${sessionId.current}`);
+        const res = await fetch(`${CHAT_API_BASE}/history/${sessionId.current}`, {
+          headers: authHeaders(),
+        });
         const data = await res.json();
         if (data.messages && data.messages.length > 0) {
           const loaded = data.messages.map((msg) => ({
@@ -77,6 +83,63 @@ function Chat() {
     };
     loadHistory();
   }, []);
+
+  // ── Fetch the real session list when the drawer opens ──
+  const fetchSessions = useCallback(async () => {
+    setSessionsLoading(true);
+    try {
+      const res = await fetch(`${CHAT_API_BASE}/sessions`, {
+        headers: authHeaders(),
+      });
+      const data = await res.json();
+      setSessionLogs(data.sessions || []);
+    } catch (err) {
+      console.error('Failed to load session list:', err);
+    } finally {
+      setSessionsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (showHistory) {
+      fetchSessions();
+    }
+  }, [showHistory, fetchSessions]);
+
+  // ── Load a past session's real messages into the chat ──
+  const loadSession = async (clickedSessionId) => {
+    setLoadingSessionId(clickedSessionId);
+    try {
+      const res = await fetch(`${CHAT_API_BASE}/history/${clickedSessionId}`, {
+        headers: authHeaders(),
+      });
+      if (!res.ok) throw new Error(`Server responded with ${res.status}`);
+      const data = await res.json();
+
+      sessionId.current = clickedSessionId;
+      localStorage.setItem('mindease_session_id', clickedSessionId);
+
+      const loaded = (data.messages || []).map((msg) => ({
+        id: msg._id,
+        role: msg.sender,
+        text: msg.content,
+        emotion: msg.emotion || null,
+      }));
+
+      setMessages(
+        loaded.length > 0
+          ? loaded
+          : [{ id: 'welcome', role: 'bot', text: "This session is empty. What's on your mind?" }]
+      );
+      setMoodSelected(true);
+      setShowHistory(false);
+    } catch (err) {
+      console.error('Failed to load session:', err);
+      showToast("Couldn't load that session. Please try again.");
+    } finally {
+      setLoadingSessionId(null);
+    }
+  };
 
   // ── Auto-scroll to bottom ──────────────────────────────
   const scrollToBottom = useCallback(() => {
@@ -141,7 +204,7 @@ function Chat() {
     try {
       const res = await fetch(`${CHAT_API_BASE}/message`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...authHeaders() },
         body: JSON.stringify({
           session_id: sessionId.current,
           message: trimmed || `[Attached file: ${fileAttachment?.name}]`,
@@ -384,17 +447,30 @@ function Chat() {
               {/* Past Sessions List */}
               <div className="space-y-3">
                 <p className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Recent Sessions</p>
+
+                {sessionsLoading && (
+                  <p className="text-xs text-on-surface-variant">Loading your sessions...</p>
+                )}
+
+                {!sessionsLoading && sessionLogs.length === 0 && (
+                  <p className="text-xs text-on-surface-variant">No past sessions yet.</p>
+                )}
+
                 {sessionLogs.map((log) => (
-                  <div
-                    key={log.id}
-                    className="glass-card rounded-2xl p-4 border border-outline-variant/30 hover:border-primary/40 cursor-pointer transition-all space-y-1"
+                  <button
+                    key={log.session_id}
+                    onClick={() => loadSession(log.session_id)}
+                    disabled={loadingSessionId === log.session_id}
+                    className="w-full text-left glass-card rounded-2xl p-4 border border-outline-variant/30 hover:border-primary/40 cursor-pointer transition-all space-y-1 disabled:opacity-60"
                   >
                     <div className="flex justify-between items-center">
                       <h4 className="font-bold text-on-surface text-sm">{log.title}</h4>
-                      <span className="text-[10px] text-on-surface-variant">{log.date}</span>
+                      <span className="text-[10px] text-on-surface-variant">
+                        {loadingSessionId === log.session_id ? 'Loading...' : log.date}
+                      </span>
                     </div>
                     <p className="text-xs text-on-surface-variant truncate">{log.preview}</p>
-                  </div>
+                  </button>
                 ))}
               </div>
             </div>
