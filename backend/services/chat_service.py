@@ -57,6 +57,15 @@ def handle_message(session_id: str, user_text: str, language: str = "en") -> dic
     }
     db.messages.insert_one(bot_msg)
 
+    # 5. Bump the session's last_seen + last_preview so the sessions list stays current
+    db.sessions.update_one(
+        {"session_id": session_id},
+        {"$set": {
+            "last_seen": datetime.utcnow().isoformat(),
+            "last_preview": user_text[:80]
+        }}
+    )
+
     return {
         "user_message": {**user_msg, "_id": user_msg["_id"]},
         "bot_message":  {**bot_msg,  "_id": bot_msg["_id"]},
@@ -109,3 +118,44 @@ def log_mood_summary(session_id: str):
         "message_count":   len(messages),
         "logged_at":       datetime.utcnow().isoformat()
     })
+
+
+def list_sessions_for_user(user_id: str, limit: int = 20) -> list:
+    """
+    Return this user's chat sessions, most recently active first, each with
+    a title (derived from the date) and a short preview of the last message.
+    Powers the "Recent Sessions" list in the chat history drawer.
+    """
+    db = get_db()
+    sessions = list(
+        db.sessions
+        .find({"user_id": user_id})
+        .sort("last_seen", -1)
+        .limit(limit)
+    )
+
+    results = []
+    for s in sessions:
+        created = s.get("created_at", "")
+        try:
+            date_obj = datetime.fromisoformat(created)
+            date_label = date_obj.strftime("%B %d, %Y")
+        except (ValueError, TypeError):
+            date_label = "Unknown date"
+
+        results.append({
+            "session_id": s["session_id"],
+            "title": f"Chat — {date_label}",
+            "date": s.get("last_seen", created),
+            "preview": s.get("last_preview", "No messages yet"),
+        })
+
+    return results
+
+
+def session_belongs_to_user(session_id: str, user_id: str) -> bool:
+    """Ownership check so one user can't load another user's session by
+    guessing/passing a session_id that isn't theirs."""
+    db = get_db()
+    session = db.sessions.find_one({"session_id": session_id, "user_id": user_id})
+    return session is not None
