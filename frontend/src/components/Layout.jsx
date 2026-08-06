@@ -5,10 +5,10 @@ import MobileNav from './MobileNav';
 
 export const LayoutContext = createContext({
   mobileMenuOpen: false,
-  toggleMobileMenu: () => {},
-  closeMobileMenu: () => {},
+  toggleMobileMenu: () => { },
+  closeMobileMenu: () => { },
   sidebarCollapsed: false,
-  toggleSidebar: () => {},
+  toggleSidebar: () => { },
 });
 
 export const useLayout = () => useContext(LayoutContext);
@@ -54,7 +54,7 @@ function Layout() {
             />
 
             {/* Slide-out Drawer */}
-            <div className="relative flex-1 max-w-xs w-full bg-surface-container-low h-full p-4 flex flex-col justify-between shadow-2xl z-10 animate-slide-in-left">
+            <div className="relative w-[75vw] max-w-[300px] bg-surface-container-low h-full p-4 flex flex-col justify-between shadow-2xl z-10 animate-slide-in-left overflow-y-auto overflow-x-hidden">
               <div className="space-y-4">
                 <div className="flex items-center justify-between px-4 pt-2">
                   <div>
@@ -85,10 +85,9 @@ function Layout() {
                       onClick={closeMobileMenu}
                       end={item.path === '/'}
                       className={({ isActive }) =>
-                        `rounded-xl flex items-center gap-3 px-4 py-3 transition-all active:scale-95 ${
-                          isActive
-                            ? 'bg-primary-container text-on-primary-container font-semibold shadow-sm'
-                            : 'text-on-surface-variant hover:bg-surface-container-high'
+                        `rounded-xl flex items-center gap-3 px-4 py-3 transition-all active:scale-95 ${isActive
+                          ? 'bg-primary-container text-on-primary-container font-semibold shadow-sm'
+                          : 'text-on-surface-variant hover:bg-surface-container-high'
                         }`
                       }
                     >
@@ -131,9 +130,8 @@ function Layout() {
 
         {/* Main Content Viewport — margin dynamically shifts based on sidebar collapse */}
         <div
-          className={`${
-            sidebarCollapsed ? 'md:ml-20' : 'md:ml-64'
-          } flex-1 flex flex-col h-full min-w-0 overflow-hidden transition-all duration-300`}
+          className={`${sidebarCollapsed ? 'md:ml-20' : 'md:ml-64'
+            } flex-1 flex flex-col h-full min-w-0 overflow-hidden transition-all duration-300`}
         >
           <main className="flex-1 flex flex-col min-h-0 overflow-y-auto pb-20 md:pb-0">
             <Outlet />

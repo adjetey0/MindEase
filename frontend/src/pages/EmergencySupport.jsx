@@ -1,83 +1,190 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useData } from '../context/DataContext';
 
-const INTERNATIONAL_HELP = [
+const GHANA_CRISIS_LINES = [
   {
-    country: 'United States & Canada',
-    flag: '🇺🇸 / 🇨🇦',
+    country: 'National Emergency Services',
+    flag: '🚨',
+    icon: 'emergency',
     lines: [
-      { name: 'Suicide & Crisis Lifeline', number: '988' },
-      { name: 'Crisis Text Line', number: 'Text HOME to 741741' },
-      { name: 'Veterans Crisis Line', number: '988 (Press 1)' },
+      { name: '🚨 National Emergency Hotline', number: '112', note: 'Free from all mobile networks' },
+      { name: '🚑 National Ambulance Service', number: '193', note: 'Medical emergencies' },
+      { name: '👮 Ghana Police Service', number: '191', note: 'Also toll-free: 18555 (MTN & Vodafone)' },
+      { name: '🔥 Ghana National Fire Service', number: '192', note: 'Fire & rescue emergencies' },
+      { name: '🌊 NADMO (Disaster Management)', number: '029 935 0030', note: 'National Disaster Management Organisation' },
     ],
   },
   {
-    country: 'United Kingdom',
-    flag: '🇬🇧',
+    country: 'Public Psychiatric Hospitals',
+    flag: '🏥',
+    icon: 'local_hospital',
     lines: [
-      { name: 'NHS Emergency', number: '999' },
-      { name: 'Samaritans Helpline', number: '116 123' },
-      { name: 'Shout Crisis Text', number: 'Text SHOUT to 85258' },
+      { name: 'Accra Psychiatric Hospital', number: 'Walk-in / Referral', note: 'Accra, Greater Accra Region' },
+      { name: 'Pantang Hospital', number: 'Walk-in / Referral', note: 'Pantang, Greater Accra Region' },
+      { name: 'Ankaful Psychiatric Hospital', number: 'Walk-in / Referral', note: 'Cape Coast, Central Region' },
     ],
   },
   {
-    country: 'Australia',
-    flag: '🇦🇺',
+    country: 'Teaching Hospitals with Mental Health Services',
+    flag: '🎓',
+    icon: 'school',
     lines: [
-      { name: 'Emergency Services', number: '000' },
-      { name: 'Lifeline Australia', number: '13 11 14' },
-      { name: 'Beyond Blue', number: '1300 22 4636' },
+      { name: 'Korle Bu Teaching Hospital', number: 'Walk-in / Referral', note: 'Psychiatry Dept – Accra' },
+      { name: 'Komfo Anokye Teaching Hospital (KATH)', number: 'Walk-in / Referral', note: 'Psychiatry Dept – Kumasi' },
     ],
   },
   {
-    country: 'Global / Europe',
-    flag: '🇪🇺',
+    country: 'Private Mental Health Clinics',
+    flag: '🧠',
+    icon: 'psychology',
     lines: [
-      { name: 'European Emergency Number', number: '112' },
-      { name: 'Befrienders Worldwide', number: 'befrienders.org' },
-      { name: 'IASP Crisis Directory', number: 'iasp.info/resources' },
+      { name: 'Aruka Centre', number: 'Schedule Online', note: 'Haatso, Accra – Therapy & Counselling' },
+      { name: 'MindX Africa', number: 'Schedule Online', note: 'Tema – Therapy & Counselling' },
+      { name: 'Premier Mind & Wellness Clinic', number: 'Schedule Online', note: 'Airport Residential, Accra' },
+      { name: 'Helping Minds Ghana', number: 'Schedule Online', note: 'Laterbiokorshie, Accra' },
     ],
   },
 ];
 
+// Haversine formula – returns distance in km between two lat/lng points
+const getDistanceKm = (lat1, lng1, lat2, lng2) => {
+  const R = 6371;
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLng = ((lng2 - lng1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLng / 2) *
+      Math.sin(dLng / 2);
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+};
+
 const INITIAL_FACILITIES = [
   {
     id: 1,
-    name: 'Northside Crisis Center',
-    distance: '0.8 miles away',
+    name: 'Accra Psychiatric Hospital',
+    type: 'Public Psychiatric Hospital',
+    distance: 'Calculating...',
     hours: 'Open 24/7',
-    phone: '800-555-0199',
-    address: '124 Healthcare Plaza, Suite 300',
-    lat: 40.73061,
-    lng: -73.935242,
+    phone: '030 276 1211',
+    address: 'Nyaniba Estates, Osu, Accra',
+    lat: 5.5480,
+    lng: -0.1895,
     active: true,
   },
   {
     id: 2,
-    name: 'Harbor Mental Health Clinic',
-    distance: '2.4 miles away',
-    hours: 'Closes at 8 PM',
-    phone: '800-555-0244',
-    address: '88 Harborview Way',
-    lat: 40.741895,
-    lng: -73.989308,
+    name: 'Korle Bu Teaching Hospital – Psychiatry',
+    type: 'Teaching Hospital',
+    distance: 'Calculating...',
+    hours: 'Mon–Fri 8am–5pm / 24h Emergency',
+    phone: '030 265 1360',
+    address: 'Korle Bu, Accra, Greater Accra',
+    lat: 5.5418,
+    lng: -0.2247,
     active: false,
   },
   {
     id: 3,
-    name: 'Central Psychiatric Emergency Unit',
-    distance: '3.1 miles away',
+    name: 'Pantang Hospital',
+    type: 'Public Psychiatric Hospital',
+    distance: 'Calculating...',
     hours: 'Open 24/7',
-    phone: '800-555-0311',
-    address: '500 Central Medical Center Dr',
-    lat: 40.712776,
-    lng: -74.005974,
+    phone: '030 396 0060',
+    address: 'Pantang, Greater Accra Region',
+    lat: 5.6833,
+    lng: -0.1667,
+    active: false,
+  },
+  {
+    id: 4,
+    name: 'Aruka Centre',
+    type: 'Private Clinic',
+    distance: 'Calculating...',
+    hours: 'Mon–Sat 8am–6pm',
+    phone: '055 900 0000',
+    address: 'Haatso, Accra',
+    lat: 5.6527,
+    lng: -0.2133,
+    active: false,
+  },
+  {
+    id: 5,
+    name: 'Premier Mind & Wellness Clinic',
+    type: 'Private Clinic',
+    distance: 'Calculating...',
+    hours: 'Mon–Fri 8am–5pm',
+    phone: '030 279 4568',
+    address: 'Airport Residential Area, Accra',
+    lat: 5.6040,
+    lng: -0.1637,
+    active: false,
+  },
+  {
+    id: 6,
+    name: 'Helping Minds Ghana',
+    type: 'Private Clinic',
+    distance: 'Calculating...',
+    hours: 'Mon–Fri 9am–5pm',
+    phone: '024 000 0000',
+    address: 'Laterbiokorshie, Accra',
+    lat: 5.5703,
+    lng: -0.2302,
+    active: false,
+  },
+  {
+    id: 7,
+    name: 'MindX Africa',
+    type: 'Private Clinic',
+    distance: 'Calculating...',
+    hours: 'Mon–Fri 8am–5pm',
+    phone: '050 000 0000',
+    address: 'Tema, Greater Accra',
+    lat: 5.6698,
+    lng: -0.0166,
+    active: false,
+  },
+  {
+    id: 8,
+    name: 'Komfo Anokye Teaching Hospital – Psychiatry',
+    type: 'Teaching Hospital',
+    distance: 'Calculating...',
+    hours: 'Mon–Fri 8am–5pm / 24h Emergency',
+    phone: '032 202 2301',
+    address: 'Bantama, Kumasi, Ashanti Region',
+    lat: 6.6912,
+    lng: -1.6228,
+    active: false,
+  },
+  {
+    id: 9,
+    name: 'Ankaful Psychiatric Hospital',
+    type: 'Public Psychiatric Hospital',
+    distance: 'Calculating...',
+    hours: 'Open 24/7',
+    phone: '033 213 3300',
+    address: 'Ankaful, Cape Coast, Central Region',
+    lat: 5.1167,
+    lng: -1.2500,
     active: false,
   },
 ];
 
 function EmergencySupport() {
   const { hotlines, emergencyContacts, addEmergencyContact, deleteEmergencyContact } = useData();
+  const { hash } = useLocation();
+
+  // Scroll to hash anchor (e.g. #local-support) when navigating from another page
+  useEffect(() => {
+    if (hash) {
+      const el = document.querySelector(hash);
+      if (el) {
+        setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 150);
+      }
+    }
+  }, [hash]);
 
   // 5-4-3-2-1 Grounding state
   const [completedSteps, setCompletedSteps] = useState({});
@@ -155,9 +262,9 @@ function EmergencySupport() {
     const L = window.L;
     if (!L) return;
 
-    // Create map centered on default coordinates (New York City)
+    // Create map centered on Accra, Ghana
     const map = L.map(mapContainerRef.current, {
-      center: [40.728, -73.965],
+      center: [5.6037, -0.1870],
       zoom: 12,
       zoomControl: true,
     });
@@ -233,6 +340,18 @@ function EmergencySupport() {
         const { latitude, longitude } = position.coords;
         setUserLocation({ lat: latitude, lng: longitude });
 
+        // Sort facilities by distance from user and update displayed distances
+        setFacilities((prev) =>
+          [...prev]
+            .map((f) => ({
+              ...f,
+              distanceKm: getDistanceKm(latitude, longitude, f.lat, f.lng),
+              distance: `${getDistanceKm(latitude, longitude, f.lat, f.lng).toFixed(1)} km away`,
+            }))
+            .sort((a, b) => a.distanceKm - b.distanceKm)
+            .map((f, idx) => ({ ...f, active: idx === 0 }))
+        );
+
         if (mapInstanceRef.current) {
           const L = window.L;
           mapInstanceRef.current.setView([latitude, longitude], 13, {
@@ -252,13 +371,13 @@ function EmergencySupport() {
               icon: userIcon,
             })
               .addTo(mapInstanceRef.current)
-              .bindPopup('<b>Your Current Location</b>')
+              .bindPopup('<b>📍 Your Current Location</b>')
               .openPopup();
           }
         }
       },
       (err) => {
-        setLocationError('Could not retrieve location. Please check browser permissions.');
+        setLocationError('Could not retrieve location. Please enable location access and try again.');
       }
     );
   };
@@ -316,16 +435,17 @@ function EmergencySupport() {
     }
   };
 
-  // Search international directory state
+  // Search Ghana crisis directory state
   const [countrySearch, setCountrySearch] = useState('');
 
-  const filteredInternational = INTERNATIONAL_HELP.filter(
+  const filteredInternational = GHANA_CRISIS_LINES.filter(
     (item) =>
       item.country.toLowerCase().includes(countrySearch.toLowerCase()) ||
       item.lines.some(
         (l) =>
           l.name.toLowerCase().includes(countrySearch.toLowerCase()) ||
-          l.number.toLowerCase().includes(countrySearch.toLowerCase())
+          l.number.toLowerCase().includes(countrySearch.toLowerCase()) ||
+          (l.note && l.note.toLowerCase().includes(countrySearch.toLowerCase()))
       )
   );
 
@@ -366,37 +486,55 @@ function EmergencySupport() {
           </div>
 
           <div className="lg:col-span-5">
-            <div className="bg-surface p-8 rounded-[2rem] shadow-md border-l-4 border-error space-y-6">
+            <div className="bg-surface p-8 rounded-[2rem] shadow-md border-l-4 border-error space-y-5">
+
+              {/* Primary: Ghana National Emergency */}
               <div className="space-y-3">
-                <h3 className="font-headline-sm text-headline-sm font-bold text-on-surface">
-                  988 Suicide &amp; Crisis Lifeline
-                </h3>
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl">🚨</span>
+                  <h3 className="font-headline-sm text-headline-sm font-bold text-on-surface">
+                    Ghana National Emergency Hotline
+                  </h3>
+                </div>
                 <p className="text-on-surface-variant font-label-md text-label-md">
-                  Available 24/7. Free and confidential call or text in English or Spanish.
+                  Free from all mobile networks. Available 24/7 for any emergency in Ghana.
                 </p>
                 <a
                   className="w-full bg-error text-on-error flex items-center justify-center gap-3 py-4 rounded-xl font-bold hover:opacity-90 transition-all active:scale-[0.98] shadow-sm"
-                  href="tel:988"
+                  href="tel:112"
                 >
                   <span className="material-symbols-outlined">call</span>
-                  Call 988 Now
+                  Call 112 – Emergency Hotline
                 </a>
               </div>
 
+              {/* Secondary quick-call grid */}
               <div className="pt-4 border-t border-outline-variant/30 space-y-3">
                 <h3 className="font-headline-sm text-headline-sm font-bold text-on-surface">
-                  Crisis Text Line
+                  Other Emergency Numbers
                 </h3>
-                <p className="text-on-surface-variant font-label-md text-label-md">
-                  Text 'HOME' to 741741 to connect with a compassionate Crisis Counselor.
-                </p>
-                <a
-                  className="w-full bg-surface-container-highest text-on-surface flex items-center justify-center gap-3 py-4 rounded-xl font-bold hover:bg-surface-container-high transition-all active:scale-[0.98]"
-                  href="sms:741741&body=HOME"
-                >
-                  <span className="material-symbols-outlined">sms</span>
-                  Text HOME to 741741
-                </a>
+                <div className="grid grid-cols-2 gap-3">
+                  <a href="tel:193" className="flex flex-col items-center gap-1 p-3 bg-surface-container rounded-xl hover:bg-surface-container-high transition text-center">
+                    <span className="text-xl">🚑</span>
+                    <span className="font-bold text-on-surface text-sm">193</span>
+                    <span className="text-[10px] text-on-surface-variant">Ambulance</span>
+                  </a>
+                  <a href="tel:191" className="flex flex-col items-center gap-1 p-3 bg-surface-container rounded-xl hover:bg-surface-container-high transition text-center">
+                    <span className="text-xl">👮</span>
+                    <span className="font-bold text-on-surface text-sm">191</span>
+                    <span className="text-[10px] text-on-surface-variant">Police</span>
+                  </a>
+                  <a href="tel:192" className="flex flex-col items-center gap-1 p-3 bg-surface-container rounded-xl hover:bg-surface-container-high transition text-center">
+                    <span className="text-xl">🔥</span>
+                    <span className="font-bold text-on-surface text-sm">192</span>
+                    <span className="text-[10px] text-on-surface-variant">Fire Service</span>
+                  </a>
+                  <a href="tel:0299350030" className="flex flex-col items-center gap-1 p-3 bg-surface-container rounded-xl hover:bg-surface-container-high transition text-center">
+                    <span className="text-xl">🌊</span>
+                    <span className="font-bold text-on-surface text-sm">NADMO</span>
+                    <span className="text-[10px] text-on-surface-variant">Disaster Mgmt</span>
+                  </a>
+                </div>
               </div>
             </div>
           </div>
@@ -667,7 +805,7 @@ function EmergencySupport() {
         </section>
 
         {/* Live Map - Local Support Finder */}
-        <section className="bg-surface-variant p-8 md:p-margin-desktop rounded-[3rem] space-y-8">
+        <section id="local-support" className="bg-surface-variant p-8 md:p-margin-desktop rounded-[3rem] space-y-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div className="max-w-full space-y-3">
               <h2 className="font-headline-lg text-headline-lg text-on-surface">Find Local Support</h2>
@@ -770,13 +908,15 @@ function EmergencySupport() {
           </div>
         </section>
 
-        {/* International Crisis Directory */}
+        {/* Ghana Crisis Lines & Help Centers Directory */}
         <section className="bg-surface-container-lowest p-8 rounded-[2rem] border border-outline-variant/20 shadow-sm space-y-6">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
-              <h2 className="font-headline-md text-headline-md text-on-surface">International Resources</h2>
+              <h2 className="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
+                🇬🇭 Ghana Crisis Lines & Help Centers
+              </h2>
               <p className="text-on-surface-variant text-body-md mt-1">
-                Global crisis lines and help centers available 24/7 around the world.
+                Official emergency services, psychiatric hospitals, and mental health clinics in Ghana.
               </p>
             </div>
             <div className="relative w-full md:w-72">
@@ -785,7 +925,7 @@ function EmergencySupport() {
               </span>
               <input
                 className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-surface-container-low border border-outline-variant/20 focus:outline-none focus:border-primary text-body-md text-on-surface"
-                placeholder="Search country or helpline..."
+                placeholder="Search service or facility..."
                 type="text"
                 value={countrySearch}
                 onChange={(e) => setCountrySearch(e.target.value)}
@@ -804,16 +944,25 @@ function EmergencySupport() {
                 </h4>
                 <div className="space-y-3">
                   {group.lines.map((line) => (
-                    <div key={line.name} className="flex justify-between items-center gap-2">
-                      <span className="text-on-surface-variant text-sm font-medium">{line.name}</span>
-                      <a
-                        href={line.number.includes('.') ? `https://${line.number}` : `tel:${line.number.replace(/\D/g, '')}`}
-                        target={line.number.includes('.') ? '_blank' : undefined}
-                        rel="noopener noreferrer"
-                        className="font-mono font-bold text-on-surface text-sm hover:text-primary transition underline"
-                      >
-                        {line.number}
-                      </a>
+                    <div key={line.name} className="flex flex-col gap-0.5">
+                      <div className="flex justify-between items-center gap-2">
+                        <span className="text-on-surface text-sm font-semibold">{line.name}</span>
+                        <a
+                          href={
+                            line.number.match(/^\d[\d\s]+$/) ? `tel:${line.number.replace(/\D/g, '')}` : undefined
+                          }
+                          className={`font-mono font-bold text-sm ${
+                            line.number.match(/^\d[\d\s]+$/)
+                              ? 'text-error hover:text-primary underline'
+                              : 'text-on-surface-variant'
+                          } transition`}
+                        >
+                          {line.number}
+                        </a>
+                      </div>
+                      {line.note && (
+                        <p className="text-[11px] text-on-surface-variant">{line.note}</p>
+                      )}
                     </div>
                   ))}
                 </div>

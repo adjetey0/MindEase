@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-const STORAGE_KEY = 'mindease_app_data_v1';
+const STORAGE_KEY = 'mindease_app_data_v2';
 
 const initialDefaultData = {
   isLoggedIn: true,
@@ -36,14 +36,15 @@ const initialDefaultData = {
       level: 'Beginner',
       enrolled: true,
       progress: 60,
+      recommendedFor: ['manage-anxiety', 'stressed-anxious'],
       image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=800&q=80',
       description: 'A comprehensive guide to understanding anxiety triggers, regulating nervous system responses, and building practical cognitive strategies.',
       modules: [
-        { id: 101, title: 'Understanding Anxiety & Nervous System', duration: '15 min', completed: true },
-        { id: 102, title: 'Breathwork & Vagus Nerve Stimulation', duration: '20 min', completed: true },
-        { id: 103, title: 'Cognitive Restructuring & Reframing', duration: '25 min', completed: true },
-        { id: 104, title: 'Building your Exposure Ladder', duration: '30 min', completed: false },
-        { id: 105, title: 'Long-term Relapse Prevention', duration: '18 min', completed: false },
+        { id: 101, title: 'Understanding Anxiety & Nervous System', duration: '15 min', type: 'article', articleId: 'a2', completed: true, moodBefore: null, moodAfter: null, reminder: null },
+        { id: 102, title: 'Breathwork & Vagus Nerve Stimulation', duration: '10 min', type: 'breathing', breathingId: 'b1', completed: true, moodBefore: null, moodAfter: null, reminder: null },
+        { id: 103, title: 'Cognitive Restructuring & Reframing', duration: '20 min', type: 'article', articleId: 'a7', completed: true, moodBefore: null, moodAfter: null, reminder: null },
+        { id: 104, title: 'Building your Exposure Ladder', duration: '30 min', type: 'exercise', completed: false, moodBefore: null, moodAfter: null, reminder: null },
+        { id: 105, title: 'Long-term Relapse Prevention', duration: '18 min', type: 'mindfulness', completed: false, moodBefore: null, moodAfter: null, reminder: null },
       ],
     },
     {
@@ -55,13 +56,14 @@ const initialDefaultData = {
       level: 'All Levels',
       enrolled: true,
       progress: 40,
+      recommendedFor: ['improve-sleep', 'trouble-falling-asleep', 'frequent-waking', 'low-energy'],
       image: 'https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?auto=format&fit=crop&w=800&q=80',
       description: 'Reset your circadian rhythm, soothe racing nighttime thoughts, and establish deeply restorative sleep hygiene routines.',
       modules: [
-        { id: 201, title: 'The Circadian Clock & Light Exposure', duration: '12 min', completed: true },
-        { id: 202, title: 'Unwinding the Racing Mind at Night', duration: '18 min', completed: true },
-        { id: 203, title: 'Progressive Muscle Relaxation', duration: '22 min', completed: false },
-        { id: 204, title: 'Designing your Sleep Sanctuary', duration: '15 min', completed: false },
+        { id: 201, title: 'The Circadian Clock & Light Exposure', duration: '12 min', type: 'article', articleId: 'a4', completed: true, moodBefore: null, moodAfter: null, reminder: null },
+        { id: 202, title: 'Unwinding the Racing Mind at Night', duration: '18 min', type: 'mindfulness', completed: true, moodBefore: null, moodAfter: null, reminder: null },
+        { id: 203, title: 'Progressive Muscle Relaxation', duration: '15 min', type: 'breathing', breathingId: 'b3', completed: false, moodBefore: null, moodAfter: null, reminder: null },
+        { id: 204, title: 'Designing your Sleep Sanctuary', duration: '15 min', type: 'article', articleId: 'a5', completed: false, moodBefore: null, moodAfter: null, reminder: null },
       ],
     },
     {
@@ -73,12 +75,13 @@ const initialDefaultData = {
       level: 'Intermediate',
       enrolled: false,
       progress: 0,
+      recommendedFor: ['reduce-stress', 'slightly-overwhelmed', 'low-energy'],
       image: 'https://images.unsplash.com/photo-1545205597-3d9d02c29597?auto=format&fit=crop&w=800&q=80',
       description: 'Reclaim your energy, set healthy boundaries at work and home, and build emotional resilience against chronic exhaustion.',
       modules: [
-        { id: 301, title: 'Recognizing Burnout Signals Early', duration: '15 min', completed: false },
-        { id: 302, title: 'Setting Firm Psychological Boundaries', duration: '20 min', completed: false },
-        { id: 303, title: 'Rest vs. Inactivity: Real Recovery', duration: '25 min', completed: false },
+        { id: 301, title: 'Recognizing Burnout Signals Early', duration: '15 min', type: 'article', articleId: 'a1', completed: false, moodBefore: null, moodAfter: null, reminder: null },
+        { id: 302, title: 'Setting Firm Psychological Boundaries', duration: '20 min', type: 'exercise', completed: false, moodBefore: null, moodAfter: null, reminder: null },
+        { id: 303, title: 'Rest vs. Inactivity: Real Recovery', duration: '25 min', type: 'mindfulness', completed: false, moodBefore: null, moodAfter: null, reminder: null },
       ],
     },
     {
@@ -90,12 +93,79 @@ const initialDefaultData = {
       level: 'Intermediate',
       enrolled: false,
       progress: 0,
+      recommendedFor: ['mental-clarity', 'foggy-unfocused', 'cbt-guided'],
       image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80',
       description: 'Master practical Cognitive Behavioral Therapy techniques to reframe catastrophic thoughts and tackle everyday stress.',
       modules: [
-        { id: 401, title: 'Identifying Thought Distortions', duration: '20 min', completed: false },
-        { id: 402, title: 'Behavioral Activation Techniques', duration: '25 min', completed: false },
-        { id: 403, title: 'Problem Solving vs Worrying', duration: '18 min', completed: false },
+        { id: 401, title: 'Identifying Thought Distortions', duration: '20 min', type: 'article', articleId: 'a7', completed: false, moodBefore: null, moodAfter: null, reminder: null },
+        { id: 402, title: 'Behavioral Activation Techniques', duration: '25 min', type: 'exercise', completed: false, moodBefore: null, moodAfter: null, reminder: null },
+        { id: 403, title: 'Problem Solving vs Worrying', duration: '18 min', type: 'mindfulness', completed: false, moodBefore: null, moodAfter: null, reminder: null },
+      ],
+    },
+    {
+      id: 5,
+      title: '7-Day Stress Relief Program',
+      category: 'Stress',
+      instructor: 'Dr. Aris Thorne',
+      duration: '1 Week',
+      level: 'Beginner',
+      enrolled: false,
+      progress: 0,
+      recommendedFor: ['reduce-stress', 'slightly-overwhelmed', 'stressed-anxious'],
+      image: 'https://images.unsplash.com/photo-1474418397713-7ede21d49118?auto=format&fit=crop&w=800&q=80',
+      description: 'A focused 7-day programme combining breathwork, mindfulness, and psychoeducation to dramatically reduce stress in just one week.',
+      modules: [
+        { id: 501, title: 'Day 1: Understanding Your Stress', duration: '12 min', type: 'article', articleId: 'a1', completed: false, moodBefore: null, moodAfter: null, reminder: null },
+        { id: 502, title: 'Day 2: Belly Breathing for Calm', duration: '10 min', type: 'breathing', breathingId: 'b3', completed: false, moodBefore: null, moodAfter: null, reminder: null },
+        { id: 503, title: 'Day 3: Mindful Body Scan', duration: '15 min', type: 'mindfulness', completed: false, moodBefore: null, moodAfter: null, reminder: null },
+        { id: 504, title: 'Day 4: Stress Journalling Exercise', duration: '20 min', type: 'exercise', completed: false, moodBefore: null, moodAfter: null, reminder: null },
+        { id: 505, title: 'Day 5: Box Breathing Mastery', duration: '10 min', type: 'breathing', breathingId: 'b1', completed: false, moodBefore: null, moodAfter: null, reminder: null },
+        { id: 506, title: 'Day 6: How Breathing Controls Your Nervous System', duration: '12 min', type: 'article', articleId: 'a8', completed: false, moodBefore: null, moodAfter: null, reminder: null },
+        { id: 507, title: 'Day 7: Coherent Breathing & Reflection', duration: '15 min', type: 'breathing', breathingId: 'b4', completed: false, moodBefore: null, moodAfter: null, reminder: null },
+      ],
+    },
+    {
+      id: 6,
+      title: 'Mindfulness Starter Journey',
+      category: 'Mindfulness',
+      instructor: 'Sarah Jenkins, M.Sc.',
+      duration: '1 Week',
+      level: 'Beginner',
+      enrolled: false,
+      progress: 0,
+      recommendedFor: ['mental-clarity', 'calm-balanced', 'audio-breathwork'],
+      image: 'https://images.unsplash.com/photo-1545389336-cf090694435e?auto=format&fit=crop&w=800&q=80',
+      description: 'Your first week of mindfulness - from understanding what it is to building a sustainable daily practice with breath and body awareness.',
+      modules: [
+        { id: 601, title: 'What Is Mindfulness? A Scientific Introduction', duration: '12 min', type: 'article', articleId: 'a6', completed: false, moodBefore: null, moodAfter: null, reminder: null },
+        { id: 602, title: 'Breath Awareness Practice', duration: '10 min', type: 'breathing', breathingId: 'b3', completed: false, moodBefore: null, moodAfter: null, reminder: null },
+        { id: 603, title: 'Guided Body Scan Meditation', duration: '15 min', type: 'mindfulness', completed: false, moodBefore: null, moodAfter: null, reminder: null },
+        { id: 604, title: 'How Breathing Controls Your Nervous System', duration: '12 min', type: 'article', articleId: 'a8', completed: false, moodBefore: null, moodAfter: null, reminder: null },
+        { id: 605, title: '4-7-8 Relaxation Breathing', duration: '8 min', type: 'breathing', breathingId: 'b2', completed: false, moodBefore: null, moodAfter: null, reminder: null },
+        { id: 606, title: 'Mindful Walking Exercise', duration: '20 min', type: 'exercise', completed: false, moodBefore: null, moodAfter: null, reminder: null },
+        { id: 607, title: 'Loving Kindness Meditation', duration: '15 min', type: 'mindfulness', completed: false, moodBefore: null, moodAfter: null, reminder: null },
+      ],
+    },
+    {
+      id: 7,
+      title: 'CBT for Anxiety Management',
+      category: 'Anxiety',
+      instructor: 'Dr. Michael Chang',
+      duration: '4 Weeks',
+      level: 'Intermediate',
+      enrolled: false,
+      progress: 0,
+      recommendedFor: ['manage-anxiety', 'stressed-anxious', 'cbt-guided'],
+      image: 'https://images.unsplash.com/photo-1473091534298-04dcbce3278c?auto=format&fit=crop&w=800&q=80',
+      description: 'Evidence-based CBT techniques specifically designed to identify, challenge, and rewire anxiety-driven thought patterns for lasting relief.',
+      modules: [
+        { id: 701, title: "The Science of Anxiety: Your Brain's Alarm System", duration: '14 min', type: 'article', articleId: 'a2', completed: false, moodBefore: null, moodAfter: null, reminder: null },
+        { id: 702, title: '5 Evidence-Based Anxiety Strategies', duration: '12 min', type: 'article', articleId: 'a3', completed: false, moodBefore: null, moodAfter: null, reminder: null },
+        { id: 703, title: 'Box Breathing for Acute Anxiety', duration: '10 min', type: 'breathing', breathingId: 'b1', completed: false, moodBefore: null, moodAfter: null, reminder: null },
+        { id: 704, title: 'Cognitive Reframing Practice', duration: '20 min', type: 'article', articleId: 'a7', completed: false, moodBefore: null, moodAfter: null, reminder: null },
+        { id: 705, title: 'Thought Record Worksheet Exercise', duration: '25 min', type: 'exercise', completed: false, moodBefore: null, moodAfter: null, reminder: null },
+        { id: 706, title: 'Coherent Breathing for HRV', duration: '10 min', type: 'breathing', breathingId: 'b4', completed: false, moodBefore: null, moodAfter: null, reminder: null },
+        { id: 707, title: 'Progressive Relaxation & Review', duration: '18 min', type: 'mindfulness', completed: false, moodBefore: null, moodAfter: null, reminder: null },
       ],
     },
   ],
@@ -151,7 +221,7 @@ const initialDefaultData = {
       readTime: '12 min read',
       bgUrl: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1200&q=80',
       desc: 'Learn practical cognitive behavioral techniques to navigate complex emotions with grace and resilience.',
-      content: 'Emotional regulation is the ability to exert control over one’s emotional state. It involves tactics like cognitive reframing, mindfulness, and sensory grounding.',
+      content: 'Emotional regulation is the ability to exert control over oneÃ¢â‚¬â„¢s emotional state. It involves tactics like cognitive reframing, mindfulness, and sensory grounding.',
       saved: true
     },
     {
@@ -242,10 +312,10 @@ const initialDefaultData = {
     { id: 2, name: 'David Morgan', phone: '+1 (555) 876-5432', relation: 'Brother / Next of Kin' }
   ],
   hotlines: [
-    { id: 1, country: 'United States & Canada', name: '988 Suicide & Crisis Lifeline', number: '988', text: 'Call or text 988 (Available 24/7, free & confidential)', category: 'National' },
-    { id: 2, country: 'United States', name: 'Crisis Text Line', number: '741741', text: 'Text HOME to 741741 to connect with a crisis counselor', category: 'Text Support' },
-    { id: 3, country: 'United Kingdom', name: 'Samaritans UK', number: '116 123', text: 'Call 116 123 (Free 24/7 support)', category: 'National' },
-    { id: 4, country: 'International', name: 'Befrienders Worldwide', number: 'befrienders.org', text: 'Find support services in over 40 countries', category: 'Global' }
+    { id: 1, country: 'Ghana', name: 'Ã°Å¸Å¡Â¨ National Emergency Hotline', number: '112', text: 'Free from all mobile networks Ã¢â‚¬â€œ Available 24/7', category: 'National Emergency' },
+    { id: 2, country: 'Ghana', name: 'Ã°Å¸Å¡â€˜ National Ambulance Service', number: '193', text: 'Call 193 for medical emergencies', category: 'Medical Emergency' },
+    { id: 3, country: 'Ghana', name: 'Ã°Å¸â€˜Â® Ghana Police Service', number: '191', text: 'Call 191 or toll-free 18555 (MTN & Vodafone)', category: 'Police' },
+    { id: 4, country: 'Ghana', name: 'Ã°Å¸Å’Å  NADMO Disaster Management', number: '029 935 0030', text: 'National Disaster Management Organisation', category: 'Disaster' }
   ],
   faqs: [
     { id: 1, question: 'Is MindEase free to use?', answer: 'Yes! MindEase offers free access to core AI chat support, daily mood tracking, community forums, and self-guided mindfulness tools. Premium plans unlock unlimited video sessions and 1-on-1 specialist calls.', category: 'General' },
@@ -280,7 +350,7 @@ const initialDefaultData = {
     { id: 1, emotion: 'Focused', date: '2026-07-13', note: 'Set intentions for the week.' },
   ],
   chatMessages: [
-    { id: 1, sender: 'bot', text: "Hello Alex! 👋 I'm your MindEase AI companion. How are you feeling today? You can share anything that's on your mind.", timestamp: '10:00 AM' }
+    { id: 1, sender: 'bot', text: "Hello Alex! Ã°Å¸â€˜â€¹ I'm your MindEase AI companion. How are you feeling today? You can share anything that's on your mind.", timestamp: '10:00 AM' }
   ],
   landingStats: [
     { label: 'Active Users Supported', value: '50,000+' },
@@ -390,6 +460,42 @@ export function DataProvider({ children }) {
       });
       return { ...prev, programs: updatedPrograms };
     });
+  };
+
+  // Log mood before/after an activity
+  const logActivityMood = (programId, moduleId, phase, mood) => {
+    setData((prev) => ({
+      ...prev,
+      programs: prev.programs.map((p) =>
+        p.id === programId
+          ? {
+              ...p,
+              modules: p.modules.map((m) =>
+                m.id === moduleId
+                  ? { ...m, [phase === 'before' ? 'moodBefore' : 'moodAfter']: mood }
+                  : m
+              ),
+            }
+          : p
+      ),
+    }));
+  };
+
+  // Set a daily reminder time for an activity
+  const setActivityReminder = (programId, moduleId, time) => {
+    setData((prev) => ({
+      ...prev,
+      programs: prev.programs.map((p) =>
+        p.id === programId
+          ? {
+              ...p,
+              modules: p.modules.map((m) =>
+                m.id === moduleId ? { ...m, reminder: time } : m
+              ),
+            }
+          : p
+      ),
+    }));
   };
 
   // Community actions
@@ -573,6 +679,21 @@ export function DataProvider({ children }) {
     }));
   };
 
+  // Clear chat Ã¢â‚¬â€ resets to the initial welcome message
+  const clearChat = () => {
+    setData((prev) => ({
+      ...prev,
+      chatMessages: [
+        {
+          id: Date.now(),
+          sender: 'bot',
+          text: `Hello ${prev.profile.name?.split(' ')[0] || 'there'}! Ã°Å¸â€˜â€¹ I'm your MindEase AI companion. How are you feeling today? You can share anything that's on your mind.`,
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        }
+      ]
+    }));
+  };
+
   const resetAllData = () => {
     const loggedOutState = {
       ...initialDefaultData,
@@ -635,6 +756,8 @@ export function DataProvider({ children }) {
         completeAssessment,
         toggleEnrollProgram,
         toggleModuleCompletion,
+        logActivityMood,
+        setActivityReminder,
         createCommunityPost,
         toggleLikePost,
         addCommentToPost,
@@ -643,6 +766,7 @@ export function DataProvider({ children }) {
         deleteEmergencyContact,
         logMood,
         sendChatMessage,
+        clearChat,
         submitSupportTicket,
         updateSettings,
         resetAllData,
@@ -653,3 +777,4 @@ export function DataProvider({ children }) {
     </DataContext.Provider>
   );
 }
+

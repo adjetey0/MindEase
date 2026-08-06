@@ -3,11 +3,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useLayout } from '../components/Layout';
 import { useTheme } from '../context/ThemeContext';
 import { useData } from '../context/DataContext';
+import { ARTICLES } from '../data/articlesData';
 
 function Profile() {
   const { toggleMobileMenu } = useLayout();
   const { darkMode, setDarkMode } = useTheme();
-  const { profile, updateProfile, resources, resetAllData } = useData();
+  const { profile, updateProfile, resetAllData, toggleBookmarkResource } = useData();
   const avatarInputRef = useRef(null);
   const navigate = useNavigate();
 
@@ -50,7 +51,7 @@ function Profile() {
     e.target.value = '';
   };
 
-  const savedResourcesList = resources.filter((r) => profile.savedResourceIds.includes(r.id));
+  const savedResourcesList = ARTICLES.filter((r) => profile.savedResourceIds.includes(r.id));
 
   return (
     <div className="flex-1 flex flex-col min-h-0 overflow-hidden bg-background relative">
@@ -76,10 +77,11 @@ function Profile() {
               setEditBio(profile.bio);
               setEditModalOpen(true);
             }}
-            className="bg-primary text-white px-4 py-2 rounded-full font-label-md hover:opacity-90 transition flex items-center gap-1.5 text-xs font-bold shadow"
+            className="bg-primary text-white px-3 py-2 sm:px-4 sm:py-2 rounded-full font-label-md hover:opacity-90 transition flex items-center gap-1.5 text-xs font-bold shadow"
+            title="Edit Profile"
           >
             <span className="material-symbols-outlined text-sm">edit</span>
-            <span>Edit Profile</span>
+            <span className="hidden sm:inline">Edit Profile</span>
           </button>
         </div>
       </header>
@@ -164,17 +166,37 @@ function Profile() {
               {savedResourcesList.length > 0 ? (
                 <div className="space-y-3">
                   {savedResourcesList.map((r) => (
-                    <div key={r.id} className="p-3 bg-surface-container-low rounded-xl flex items-center justify-between text-xs">
-                      <div>
-                        <p className="font-bold text-on-surface line-clamp-1">{r.title}</p>
-                        <span className="text-[10px] text-primary">{r.category} • {r.readTime}</span>
+                    <div key={r.id} className="p-3 bg-surface-container-low rounded-xl flex items-center gap-3 text-xs group">
+                      {r.bgUrl && (
+                        <div className="w-14 h-14 rounded-xl overflow-hidden shrink-0">
+                          <img src={r.bgUrl} alt={r.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                        </div>
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <p className="font-bold text-on-surface line-clamp-1 group-hover:text-primary transition-colors">{r.title}</p>
+                        <span className="text-[10px] text-primary font-semibold">{r.category} • {r.readTime}</span>
                       </div>
-                      <Link to="/resources" className="text-primary font-semibold hover:underline">View</Link>
+                      <div className="flex items-center gap-1 shrink-0">
+                        <Link to="/resources" className="text-primary font-semibold hover:underline">View</Link>
+                        <button
+                          onClick={() => toggleBookmarkResource(r.id)}
+                          className="ml-1 text-on-surface-variant hover:text-error transition-colors"
+                          title="Remove bookmark"
+                        >
+                          <span className="material-symbols-outlined text-base" style={{ fontVariationSettings: "'FILL' 1" }}>bookmark_remove</span>
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </div>
               ) : (
-                <p className="text-xs text-on-surface-variant">No saved resources yet. Bookmark articles from the Resource library!</p>
+                <div className="flex flex-col items-center gap-3 py-4 text-center">
+                  <span className="material-symbols-outlined text-3xl text-outline">bookmark_border</span>
+                  <p className="text-xs text-on-surface-variant">No saved resources yet. Bookmark articles from the Resource library!</p>
+                  <Link to="/resources" className="text-xs font-bold text-primary hover:underline flex items-center gap-1">
+                    <span className="material-symbols-outlined text-sm">open_in_new</span> Browse Resources
+                  </Link>
+                </div>
               )}
             </section>
 

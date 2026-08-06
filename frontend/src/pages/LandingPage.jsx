@@ -99,7 +99,7 @@ function LandingPage() {
             MindEase
           </Link>
           <div className="hidden md:flex gap-8">
-            <Link to="/resources" className="text-primary font-bold border-b-2 border-primary pb-1 font-body-md text-body-md">
+            <Link to="/resources" className="text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md">
               Resources
             </Link>
             <Link to="/programs" className="text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md">
