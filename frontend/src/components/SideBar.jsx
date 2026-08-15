@@ -10,7 +10,6 @@ function Sidebar() {
   const [notifOpen, setNotifOpen] = useState(false);
 
   const navItems = [
-    { name: 'Home', path: '/', icon: 'home' },
     { name: 'Dashboard', path: '/dashboard', icon: 'dashboard' },
     { name: 'Chat', path: '/chat', icon: 'forum' },
     { name: 'Profile', path: '/profile', icon: 'person' },
@@ -19,20 +18,21 @@ function Sidebar() {
   return (
     <>
       <aside
-        className={`hidden md:flex flex-col fixed left-0 top-0 h-screen bg-surface-container-low border-r border-outline-variant/20 z-50 p-4 space-y-2 transition-all duration-300 ${sidebarCollapsed ? 'w-20 items-center' : 'w-64'
+        className={`hidden md:flex flex-col fixed left-0 top-0 h-screen bg-surface-container-low border-r border-outline-variant/20 z-50 p-4 space-y-2 overflow-hidden transition-[width] duration-150 ease-out will-change-[width] ${sidebarCollapsed ? 'w-20 items-center' : 'w-64'
           }`}
       >
         {/* Header with Title and Hide/Collapse Toggle Button */}
         <div className={`flex items-center justify-between w-full mb-4 ${sidebarCollapsed ? 'px-0 py-4 flex-col gap-3' : 'px-2 py-4'}`}>
           {!sidebarCollapsed && (
-            <div className="min-w-0 flex-1 pr-2">
+            <div className="min-w-0 flex-1 pr-2 flex items-center gap-2">
+              <img src="/mindEaseLogo.png" alt="MindEase Logo" className="w-6 h-6 object-contain shrink-0 logo-blue" />
               <h1 className="font-headline-md text-headline-md font-bold text-primary tracking-tight truncate">MindEase</h1>
             </div>
           )}
 
           {sidebarCollapsed && (
-            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary font-bold">
-              <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>spa</span>
+            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center p-1">
+              <img src="/mindEaseLogo.png" alt="MindEase Logo" className="w-6 h-6 object-contain logo-blue" />
             </div>
           )}
 
@@ -48,7 +48,6 @@ function Sidebar() {
           </button>
         </div>
 
-<<<<<<< HEAD
         {/* Main Navigation Items */}
         <nav className="flex-1 space-y-1.5 overflow-y-auto custom-scrollbar w-full">
           {navItems.map((item) => (
@@ -85,19 +84,6 @@ function Sidebar() {
             title="Notifications"
             className={`w-full rounded-xl flex items-center transition-all active:scale-[0.98] relative ${sidebarCollapsed ? 'justify-center p-3' : 'gap-3 px-4 py-3'
               } ${notifOpen
-=======
-      {/* Main Navigation Items */}
-      <nav className="flex-1 min-h-0 space-y-1.5 overflow-y-auto custom-scrollbar w-full">
-        {navItems.map((item) => (
-          <NavLink
-            key={item.name}
-            to={item.path}
-            end={item.path === '/'}
-            title={sidebarCollapsed ? item.name : undefined}
-            className={({ isActive }) =>
-              `rounded-xl flex items-center transition-all active:scale-[0.98] ${sidebarCollapsed ? 'justify-center p-3' : 'gap-3 px-4 py-3'
-              } ${isActive
->>>>>>> f3c8619a2db788a2776707a94a08c94eeb63c82c
                 ? 'bg-primary-container text-on-primary-container font-semibold shadow-sm'
                 : 'text-on-surface-variant hover:bg-surface-container-high'
               }`}
