@@ -3,7 +3,7 @@ from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import cm
-from models import MoodLog
+from models import get_db
 from utils.helpers import format_datetime, emotion_to_emoji
 from flask import current_app
 from datetime import datetime
@@ -34,10 +34,13 @@ def generate_pdf_report(session_id: str) -> str:
     story.append(Spacer(1, 0.5*cm))
 
     # Mood Summary Table
-    logs  = MoodLog.query.filter_by(session_id=session_id).order_by(MoodLog.logged_at).all()
+    db    = get_db()
+    logs  = list(db.mood_logs.find({"session_id": session_id}).sort("logged_at", 1))
     total = Counter()
+
     for log in logs:
-        total.update(log.get_emotion_counts())
+        counts = log.get("emotion_counts", {})
+        total.update(counts)
 
     story.append(Paragraph("Emotion Summary", styles["Heading2"]))
     if total:

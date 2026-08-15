@@ -171,11 +171,48 @@ function LandingPage() {
             </div>
 
             {/* Hero Image */}
+<<<<<<< HEAD
             <div className="relative w-full aspect-video md:aspect-[21/9] rounded-3xl overflow-hidden shadow-2xl border border-outline-variant/20">
+=======
+            <div className="relative w-full aspect-video md:aspect-[21/9] rounded-3xl overflow-hidden shadow-2xl border border-outline-variant/20 mb-14">
+>>>>>>> f3c8619a2db788a2776707a94a08c94eeb63c82c
               <img
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuDCjfJPs0HUmTaq5TRpk7pzjKQ2Jml2OUhJfnZK2di54KAAC1c8RhyTc2IBIi6ygcUVtGdNfoMDikZaZTQPymi7TSk2lWtNu9uFfwcb3vkxALRjR80QWANmXCLfdCZf4Kkq4Yg8b5XCPLho2pIbxSwVTvELWsfddJSlI7Ufbn6ycyqDKYvT8Evge_xnXJmpex71-LEaiLN1I4IDHrmLzx8kK1zjnIkwIbvyah7mAgfgXnajzKSc-p5fOwoOxTwB04PfSGpKEdPEuwO1"
                 alt="A serene and minimalist zen garden at dawn with soft pastel blues and lavenders evoking mental clarity"
                 className="w-full h-full object-cover"
+<<<<<<< HEAD
+=======
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent" />
+            </div>
+
+            {/* Dynamic Stats Banner */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 w-full max-w-4xl p-6 bg-surface-container-lowest rounded-3xl border border-outline-variant/20 shadow-md">
+              {landingStats.map((st) => (
+                <div key={st.label} className="text-center space-y-1">
+                  <p className="text-2xl sm:text-3xl font-bold text-primary">{st.value}</p>
+                  <p className="text-[11px] text-on-surface-variant font-semibold">{st.label}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Dynamic Features Bento Grid */}
+        <section className="py-16 md:py-24 bg-surface-container-low">
+          <div className="container mx-auto px-margin-mobile md:px-margin-desktop max-w-6xl">
+            <div className="flex flex-col md:flex-row justify-between items-end mb-10 gap-4">
+              <div>
+                <h2 className="font-headline-lg text-2xl sm:text-4xl font-bold text-on-surface mb-2">Comprehensive Mental Tools</h2>
+                <p className="text-on-surface-variant text-sm">Explore our suite of evidence-based wellness features.</p>
+              </div>
+              <input
+                type="text"
+                placeholder="Filter tools..."
+                value={featureSearch}
+                onChange={(e) => setFeatureSearch(e.target.value)}
+                className="px-4 py-2 rounded-full bg-surface text-xs border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary/20 w-full md:w-64"
+>>>>>>> f3c8619a2db788a2776707a94a08c94eeb63c82c
               />
               <div className="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent" />
             </div>

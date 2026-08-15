@@ -152,6 +152,7 @@ function Dashboard() {
             </div>
           </div>
 
+<<<<<<< HEAD
           {/* Main Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
 
@@ -167,6 +168,64 @@ function Dashboard() {
                       Today's Mood
                     </h3>
                     <p className="text-xs text-on-surface-variant mt-0.5">How are you feeling right now?</p>
+=======
+          {/* Daily Streak Chart */}
+          <div className="bg-surface-container-lowest rounded-[2rem] p-md border border-outline-variant/10 card-shadow">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+              <div>
+                <h3 className="font-headline-sm text-headline-sm font-semibold text-on-surface flex items-center gap-2">
+                  <span className="material-symbols-outlined text-amber-500" style={{ fontVariationSettings: "'FILL' 1" }}>local_fire_department</span>
+                  Daily Streak Tracker
+                </h3>
+                <p className="font-body-md text-body-md text-on-surface-variant">Your mood check-in history over the last 14 days</p>
+              </div>
+              <div className="flex items-center gap-2 px-4 py-2 bg-amber-500/10 text-amber-600 rounded-full border border-amber-500/20">
+                <span className="material-symbols-outlined text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>whatshot</span>
+                <span className="font-bold text-lg">{profile.streak}</span>
+                <span className="text-xs font-semibold">day streak</span>
+              </div>
+            </div>
+
+            {(() => {
+              const emotionMap = {
+                'Calm': { height: 70, color: 'bg-emerald-500', emoji: '😌' },
+                'Happy': { height: 90, color: 'bg-amber-400', emoji: '😊' },
+                'Focused': { height: 80, color: 'bg-sky-500', emoji: '🎯' },
+                'Anxious': { height: 40, color: 'bg-rose-400', emoji: '😰' },
+                'Tired': { height: 30, color: 'bg-indigo-400', emoji: '😴' },
+                'Stressed': { height: 35, color: 'bg-orange-400', emoji: '😓' },
+                'Peaceful': { height: 85, color: 'bg-teal-400', emoji: '🧘' },
+                'Okay': { height: 55, color: 'bg-slate-400', emoji: '😐' },
+              };
+              const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+              const chartLogs = [...moodLogs].slice(0, 14).reverse();
+
+              return (
+                <div className="space-y-4">
+                  <div className="flex items-end gap-1.5 sm:gap-2 h-40 sm:h-48 px-2">
+                    {chartLogs.map((log, i) => {
+                      const meta = emotionMap[log.emotion] || { height: 50, color: 'bg-primary', emoji: '🙂' };
+                      const date = new Date(log.date);
+                      const dayLabel = dayNames[date.getDay()];
+                      const dateLabel = `${date.getMonth() + 1}/${date.getDate()}`;
+
+                      return (
+                        <div key={log.id || i} className="flex-1 flex flex-col items-center gap-1 group relative">
+                          <div className="absolute -top-14 left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface px-3 py-1.5 rounded-lg text-[10px] font-semibold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 shadow-lg">
+                            {log.emotion} • {log.date}
+                            {log.note && <span className="block text-[9px] opacity-70 mt-0.5">"{log.note}"</span>}
+                          </div>
+                          <span className="text-sm sm:text-base opacity-0 group-hover:opacity-100 transition-opacity">{meta.emoji}</span>
+                          <div
+                            className={`w-full rounded-t-lg ${meta.color} transition-all duration-500 hover:opacity-80 cursor-pointer min-w-[14px]`}
+                            style={{ height: `${meta.height}%`, animationDelay: `${i * 60}ms` }}
+                          />
+                          <span className="text-[9px] sm:text-[10px] text-on-surface-variant font-semibold">{dayLabel}</span>
+                          <span className="text-[8px] text-outline hidden sm:block">{dateLabel}</span>
+                        </div>
+                      );
+                    })}
+>>>>>>> f3c8619a2db788a2776707a94a08c94eeb63c82c
                   </div>
                   {moodLoggedSuccess && (
                     <div className="flex items-center gap-1.5 bg-emerald-500/10 text-emerald-600 px-3 py-1.5 rounded-full text-xs font-semibold border border-emerald-500/20">
@@ -196,6 +255,7 @@ function Dashboard() {
                 )}
               </div>
 
+<<<<<<< HEAD
               {/* 3. LATEST ASSESSMENT RESULT */}
               <div className="bg-surface-container-lowest rounded-3xl p-5 border border-outline-variant/10 shadow-sm">
                 <h3 className="font-bold text-on-surface text-base flex items-center gap-2 mb-4">
@@ -330,6 +390,13 @@ function Dashboard() {
                           <p className="text-sm text-on-surface leading-snug line-clamp-2">{msg.text}</p>
                           <p className="text-[10px] text-outline mt-1">{msg.timestamp}</p>
                         </div>
+=======
+                  <div className="flex flex-wrap gap-3 pt-2 border-t border-outline-variant/10 justify-center">
+                    {Object.entries(emotionMap).slice(0, 6).map(([label, meta]) => (
+                      <div key={label} className="flex items-center gap-1.5">
+                        <span className={`w-2.5 h-2.5 rounded-full ${meta.color}`} />
+                        <span className="text-[10px] font-semibold text-on-surface-variant">{label}</span>
+>>>>>>> f3c8619a2db788a2776707a94a08c94eeb63c82c
                       </div>
                     ))}
                   </div>
@@ -373,6 +440,26 @@ function Dashboard() {
                     </button>
                   ))}
                 </div>
+<<<<<<< HEAD
+=======
+              );
+            })()}
+          </div>
+
+          {/* Bento Grid Summary */}
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+            <div className="md:col-span-8 bg-surface-container-lowest rounded-[2rem] p-md border border-outline-variant/10 card-shadow flex flex-col justify-between">
+              <div className="flex justify-between items-center mb-4">
+                <div>
+                  <h3 className="font-headline-sm text-headline-sm font-semibold text-on-surface">My Active Programs</h3>
+                  <p className="font-body-md text-body-md text-on-surface-variant">
+                    {activePrograms.length} active program{activePrograms.length !== 1 ? 's' : ''} in progress
+                  </p>
+                </div>
+                <Link to="/programs" className="text-primary font-semibold text-sm hover:underline">
+                  Browse All
+                </Link>
+>>>>>>> f3c8619a2db788a2776707a94a08c94eeb63c82c
               </div>
 
               {/* 5. DAILY WELLNESS TIP */}
@@ -423,12 +510,32 @@ function Dashboard() {
                     </div>
                   ))}
                 </div>
+<<<<<<< HEAD
                 <Link
                   to="/emergency#local-support"
                   className="w-full mt-3 text-xs font-bold text-primary border border-primary/30 py-2.5 rounded-full hover:bg-primary/10 transition flex items-center justify-center gap-1.5"
                 >
                   <span className="material-symbols-outlined text-sm">search</span>Search More Clinics
                 </Link>
+=======
+              ) : (
+                <div className="text-center py-8">
+                  <p className="text-on-surface-variant text-sm mb-4">You have not enrolled in any programs yet.</p>
+                  <Link to="/programs" className="bg-primary text-white text-xs px-5 py-2.5 rounded-full font-semibold">
+                    Explore Programs
+                  </Link>
+                </div>
+              )}
+            </div>
+
+            <div className="md:col-span-4 flex flex-col gap-gutter">
+              <div className="flex-1 bg-secondary-container/20 rounded-[2rem] p-md border border-secondary/10 flex flex-col items-center justify-center text-center">
+                <div className="w-16 h-16 bg-secondary-container text-on-secondary-container rounded-2xl flex items-center justify-center mb-4">
+                  <span className="material-symbols-outlined text-[32px]">local_fire_department</span>
+                </div>
+                <h4 className="font-headline-md text-headline-md font-bold text-on-secondary-container">{profile.streak} Days</h4>
+                <p className="font-label-md text-label-md text-on-secondary-fixed-variant">Active Wellness Streak</p>
+>>>>>>> f3c8619a2db788a2776707a94a08c94eeb63c82c
               </div>
 
             </div>

@@ -72,5 +72,9 @@ function MobileNav() {
   );
 }
 
+<<<<<<< HEAD
 export default MobileNav;
 
+=======
+export default MobileNav;
+>>>>>>> f3c8619a2db788a2776707a94a08c94eeb63c82c

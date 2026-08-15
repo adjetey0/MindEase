@@ -48,6 +48,7 @@ function Sidebar() {
           </button>
         </div>
 
+<<<<<<< HEAD
         {/* Main Navigation Items */}
         <nav className="flex-1 space-y-1.5 overflow-y-auto custom-scrollbar w-full">
           {navItems.map((item) => (
@@ -84,6 +85,19 @@ function Sidebar() {
             title="Notifications"
             className={`w-full rounded-xl flex items-center transition-all active:scale-[0.98] relative ${sidebarCollapsed ? 'justify-center p-3' : 'gap-3 px-4 py-3'
               } ${notifOpen
+=======
+      {/* Main Navigation Items */}
+      <nav className="flex-1 min-h-0 space-y-1.5 overflow-y-auto custom-scrollbar w-full">
+        {navItems.map((item) => (
+          <NavLink
+            key={item.name}
+            to={item.path}
+            end={item.path === '/'}
+            title={sidebarCollapsed ? item.name : undefined}
+            className={({ isActive }) =>
+              `rounded-xl flex items-center transition-all active:scale-[0.98] ${sidebarCollapsed ? 'justify-center p-3' : 'gap-3 px-4 py-3'
+              } ${isActive
+>>>>>>> f3c8619a2db788a2776707a94a08c94eeb63c82c
                 ? 'bg-primary-container text-on-primary-container font-semibold shadow-sm'
                 : 'text-on-surface-variant hover:bg-surface-container-high'
               }`}

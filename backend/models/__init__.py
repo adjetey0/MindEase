@@ -1,7 +1,7 @@
-from flask_sqlalchemy import SQLAlchemy
-db = SQLAlchemy()
+from flask_pymongo import PyMongo
 
-from .session  import Session
-from .message  import Message
-from .mood     import MoodLog
-from .reaction import Reaction
+mongo = PyMongo()
+
+def get_db():
+    from flask import current_app
+    return mongo.db

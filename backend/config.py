@@ -4,49 +4,33 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class Config:
-    # App
     APP_NAME        = "MindEase"
     DEBUG           = os.getenv("DEBUG", "true").lower() == "true"
     SECRET_KEY      = os.getenv("SECRET_KEY", "mindease-dev-secret-key")
-
-    # Database
-    BASE_DIR        = os.path.abspath(os.path.dirname(__file__))
-    SQLALCHEMY_DATABASE_URI = os.getenv(
-        "DATABASE_URL",
-        f"sqlite:///{os.path.join(BASE_DIR, '../database/mindease.db')}"
-    )
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
-
-    # Session (Anonymous ID)
+    MONGO_URI       = os.getenv("MONGO_URI")
+    JWT_SECRET_KEY          = os.getenv("SECRET_KEY", "mindease-dev-secret-key")
+    JWT_ACCESS_TOKEN_EXPIRES  = 30 * 24 * 60 * 60
     SESSION_ID_HEADER = "X-Session-ID"
-
-    # ML Model
     MODEL_NAME      = "distilbert-base-uncased"
-    MODEL_PATH      = os.path.join(BASE_DIR, "ml/model/saved_model")
+    MODEL_PATH      = os.path.join(os.path.abspath(os.path.dirname(__file__)), "ml/model/saved_model")
     MAX_TOKEN_LEN   = 128
-
-    # Emotion Labels
     EMOTION_LABELS  = ["anxiety", "stress", "depression", "neutral", "positive"]
-
-    # Crisis Keywords
     CRISIS_KEYWORDS = [
         "kill myself", "end my life", "want to die", "suicide",
         "self harm", "cut myself", "no reason to live", "give up on life"
     ]
-
-    # Translation
-    SUPPORTED_LANGUAGES = {
-        "en": "English",
-        "tw": "Twi",
-        "fr": "French"
-    }
+    SUPPORTED_LANGUAGES = {"en": "English", "tw": "Twi", "fr": "French"}
     DEFAULT_LANGUAGE = "en"
+    REPORT_OUTPUT_DIR = os.path.join(os.path.abspath(os.path.dirname(__file__)), "../database/reports")
+    CORS_ORIGINS = "*"
 
-    # Report
-    REPORT_OUTPUT_DIR = os.path.join(BASE_DIR, "../database/reports")
+    # --- Professional credential uploads ---
+    PROFESSIONAL_UPLOAD_FOLDER = os.path.join(os.path.abspath(os.path.dirname(__file__)), "uploads", "professional_credentials")
+    MAX_CONTENT_LENGTH = 10 * 1024 * 1024  # 10MB max upload size
 
-    # CORS
-    CORS_ORIGINS = os.getenv("CORS_ORIGINS", "http://localhost:5173").split(",")
+    # --- AI chat responses (OpenRouter) ---
+    OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
+    OPENROUTER_MODEL   = os.getenv("OPENROUTER_MODEL", "meta-llama/llama-3.3-70b-instruct:free")
 
 
 class DevelopmentConfig(Config):

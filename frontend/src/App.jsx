@@ -1,6 +1,7 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
+import ProtectedRoute from './components/ProtectedRoute';
 import LandingPage from './pages/LandingPage';
 import Dashboard from './pages/Dashboard';
 import Chat from './pages/Chat';
@@ -10,6 +11,9 @@ import Resources from './pages/Resources';
 import Profile from './pages/Profile';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import ProfessionalSignup from './pages/ProfessionalSignup';
+import ProfessionalLogin from './pages/ProfessionalLogin';
+import AdminDashboard from './pages/AdminDashboard';
 import LearnMore from './pages/LearnMore';
 import EmergencySupport from './pages/EmergencySupport';
 import Settings from './pages/Settings';
@@ -19,12 +23,45 @@ import Assessment from './pages/Assessment';
 function App() {
   return (
     <Routes>
+      {/* Public — no login required */}
       <Route path="/" element={<LandingPage />} />
-      <Route path="/learn-more" element={<LearnMore />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
+<<<<<<< HEAD
       <Route path="/assessment" element={<Assessment />} />
       <Route element={<Layout />}>
+=======
+
+      {/* Professional / Admin — separate login system, untouched */}
+      <Route path="/staff-application-kn74x" element={<ProfessionalSignup />} />
+      <Route path="/staff-portal-x7k9d" element={<ProfessionalLogin />} />
+      <Route path="/control-panel-q92j" element={<AdminDashboard />} />
+
+      {/* Everything below requires a logged-in regular user */}
+      <Route
+        path="/learn-more"
+        element={
+          <ProtectedRoute>
+            <LearnMore />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/assessment"
+        element={
+          <ProtectedRoute>
+            <Assessment />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        element={
+          <ProtectedRoute>
+            <Layout />
+          </ProtectedRoute>
+        }
+      >
+>>>>>>> f3c8619a2db788a2776707a94a08c94eeb63c82c
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/chat" element={<Chat />} />
         <Route path="/programs" element={<Programs />} />

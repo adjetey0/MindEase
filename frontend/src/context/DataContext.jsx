@@ -3,17 +3,21 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 const STORAGE_KEY = 'mindease_app_data_v2';
 
 const initialDefaultData = {
+<<<<<<< HEAD
   isLoggedIn: true,
   hasCompletedAssessment: false,
   assessmentProfile: null,
+=======
+  isLoggedIn: false,
+>>>>>>> f3c8619a2db788a2776707a94a08c94eeb63c82c
   profile: {
-    name: 'Alex Morgan',
-    email: 'alex.morgan@example.com',
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
-    bio: 'Mindfulness seeker & daily meditator. On a journey to stress reduction and emotional balance.',
-    streak: 14,
-    totalSessions: 32,
-    completedProgramsCount: 2,
+    name: '',
+    email: '',
+    avatar: '',
+    bio: '',
+    streak: 0,
+    totalSessions: 0,
+    completedProgramsCount: 0,
     badges: [
       { id: 1, name: '7-Day Streak', icon: 'local_fire_department', color: 'text-amber-500 bg-amber-500/10' },
       { id: 2, name: 'Mindfulness Starter', icon: 'spa', color: 'text-emerald-500 bg-emerald-500/10' },
@@ -312,10 +316,19 @@ const initialDefaultData = {
     { id: 2, name: 'David Morgan', phone: '+1 (555) 876-5432', relation: 'Brother / Next of Kin' }
   ],
   hotlines: [
+<<<<<<< HEAD
     { id: 1, country: 'Ghana', name: 'Ã°Å¸Å¡Â¨ National Emergency Hotline', number: '112', text: 'Free from all mobile networks Ã¢â‚¬â€œ Available 24/7', category: 'National Emergency' },
     { id: 2, country: 'Ghana', name: 'Ã°Å¸Å¡â€˜ National Ambulance Service', number: '193', text: 'Call 193 for medical emergencies', category: 'Medical Emergency' },
     { id: 3, country: 'Ghana', name: 'Ã°Å¸â€˜Â® Ghana Police Service', number: '191', text: 'Call 191 or toll-free 18555 (MTN & Vodafone)', category: 'Police' },
     { id: 4, country: 'Ghana', name: 'Ã°Å¸Å’Å  NADMO Disaster Management', number: '029 935 0030', text: 'National Disaster Management Organisation', category: 'Disaster' }
+=======
+    { id: 1, country: 'Ghana', name: 'Mental Health Authority Psychosocial Line', number: '0800678678', text: 'Call 0800 678 678 (Free, 24/7, official Ghana Mental Health Authority line)', category: 'National' },
+    { id: 2, country: 'Ghana', name: 'Emergency Services (Police, Ambulance, Fire)', number: '193', text: 'Call 193 for any immediate emergency in Ghana', category: 'Emergency' },
+    { id: 3, country: 'United States & Canada', name: '988 Suicide & Crisis Lifeline', number: '988', text: 'Call or text 988 (Available 24/7, free & confidential)', category: 'National' },
+    { id: 4, country: 'United States', name: 'Crisis Text Line', number: '741741', text: 'Text HOME to 741741 to connect with a crisis counselor', category: 'Text Support' },
+    { id: 5, country: 'United Kingdom', name: 'Samaritans UK', number: '116 123', text: 'Call 116 123 (Free 24/7 support)', category: 'National' },
+    { id: 6, country: 'International', name: 'Find A Helpline', number: 'findahelpline.com', text: 'Verified directory of crisis helplines in 130+ countries', category: 'Global' }
+>>>>>>> f3c8619a2db788a2776707a94a08c94eeb63c82c
   ],
   faqs: [
     { id: 1, question: 'Is MindEase free to use?', answer: 'Yes! MindEase offers free access to core AI chat support, daily mood tracking, community forums, and self-guided mindfulness tools. Premium plans unlock unlimited video sessions and 1-on-1 specialist calls.', category: 'General' },
@@ -776,5 +789,9 @@ export function DataProvider({ children }) {
       {children}
     </DataContext.Provider>
   );
+<<<<<<< HEAD
 }
 
+=======
+}
+>>>>>>> f3c8619a2db788a2776707a94a08c94eeb63c82c

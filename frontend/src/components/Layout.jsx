@@ -46,7 +46,7 @@ function Layout() {
 
         {/* Mobile Backdrop & Drawer */}
         {mobileMenuOpen && (
-          <div className="md:hidden fixed inset-0 z-50 flex">
+          <div className="md:hidden fixed inset-0 z-[60] flex">
             {/* Dark Backdrop */}
             <div
               className="fixed inset-0 bg-black/60 backdrop-blur-sm animate-fade-in"
@@ -137,7 +137,7 @@ function Layout() {
             <Outlet />
           </main>
         </div>
-        <MobileNav />
+        {!mobileMenuOpen && <MobileNav />}
       </div>
     </LayoutContext.Provider>
   );

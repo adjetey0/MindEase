@@ -597,6 +597,7 @@ function EmergencySupport() {
               </p>
             </div>
 
+<<<<<<< HEAD
             {/* Breathing Animation Card */}
             <div className="bg-primary-container/10 p-8 rounded-[2rem] border border-primary-container/20 shadow-sm flex flex-col items-center justify-between text-center relative overflow-hidden">
               <h3 className="font-headline-md text-headline-md text-primary mb-2">Deep Breathing Guide</h3>
@@ -623,6 +624,39 @@ function EmergencySupport() {
                     {breathPhaseText}
                   </span>
                 </div>
+=======
+            {/* Primary Action Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <a
+                href="tel:0800678678"
+                className="group flex flex-col items-center justify-center p-10 rounded-[2rem] bg-error text-white shadow-xl hover:shadow-2xl transition-all duration-300"
+              >
+                <span className="material-symbols-outlined text-5xl mb-3" style={{ fontVariationSettings: "'FILL' 1" }}>emergency_share</span>
+                <span className="font-headline-md text-2xl font-bold">Call 0800 678 678</span>
+                <span className="text-xs mt-2 opacity-90">Ghana Mental Health Authority — free, confidential, 24/7</span>
+              </a>
+
+              <a
+                href="tel:193"
+                className="group flex flex-col items-center justify-center p-10 rounded-[2rem] bg-primary text-white shadow-xl hover:shadow-2xl transition-all duration-300"
+              >
+                <span className="material-symbols-outlined text-5xl mb-3" style={{ fontVariationSettings: "'FILL' 1" }}>local_police</span>
+                <span className="font-headline-md text-2xl font-bold">Call 193 — Emergency Services</span>
+                <span className="text-xs mt-2 opacity-90">Police, ambulance, or fire — immediate danger</span>
+              </a>
+            </div>
+          </section>
+
+          {/* Personal Emergency Contacts Section */}
+          <section className="max-w-[1200px] mx-auto mb-12 bg-surface-container-lowest p-6 md:p-8 rounded-[2rem] border border-outline-variant/20 shadow-sm space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h3 className="font-headline-md text-xl font-bold text-on-surface flex items-center gap-2">
+                  <span className="material-symbols-outlined text-primary">contacts</span>
+                  <span>My Personal Emergency Contacts</span>
+                </h3>
+                <p className="text-xs text-on-surface-variant">Trusted individuals you can call during moments of overwhelm.</p>
+>>>>>>> f3c8619a2db788a2776707a94a08c94eeb63c82c
               </div>
 
               <div className="space-y-4 w-full">
@@ -982,10 +1016,22 @@ function EmergencySupport() {
                 delete_forever
               </span>
               <div>
+<<<<<<< HEAD
                 <p className="font-bold text-on-surface text-base">Remove Contact?</p>
                 <p className="text-on-surface-variant text-sm mt-1">
                   This contact will be removed from your emergency contact list.
                 </p>
+=======
+                <label className="block text-xs font-bold text-on-surface-variant mb-1">Phone Number</label>
+                <input
+                  type="tel"
+                  placeholder="+233 24 000 0000"
+                  value={contactPhone}
+                  onChange={(e) => setContactPhone(e.target.value)}
+                  required
+                  className="w-full p-3 rounded-xl bg-surface-container-low border border-outline-variant/20 text-sm font-semibold focus:outline-none"
+                />
+>>>>>>> f3c8619a2db788a2776707a94a08c94eeb63c82c
               </div>
               <div className="flex gap-3">
                 <button
