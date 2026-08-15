@@ -136,7 +136,6 @@ function Assessment() {
         </div>
       </header>
 
-<<<<<<< HEAD
       {/* Main Content */}
       <main className="flex-1 flex flex-col items-center justify-start py-10 px-4">
         <div className="w-full max-w-2xl mx-auto">
@@ -145,19 +144,6 @@ function Assessment() {
             <>
               {/* Progress Header */}
               <div className="mb-8 space-y-3">
-=======
-      {/* Main Content Scrollable Viewport */}
-      <div className="flex-1 overflow-y-auto min-h-0 flex flex-col custom-scrollbar relative">
-        <div
-          className="w-full mx-auto px-margin-mobile md:px-margin-desktop py-8 sm:py-12 flex-grow"
-          style={{ maxWidth: '1280px' }}
-        >
-
-          {!isCompleted ? (
-            <>
-              {/* Progress Bar Header */}
-              <div className="mx-auto mb-8 sm:mb-12 space-y-3" style={{ maxWidth: '720px' }}>
->>>>>>> f3c8619a2db788a2776707a94a08c94eeb63c82c
                 <div className="flex justify-between items-center">
                   <span className="text-sm font-bold text-primary flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-primary animate-pulse inline-block" />
@@ -175,26 +161,12 @@ function Assessment() {
                 </div>
               </div>
 
-<<<<<<< HEAD
               {/* Question Card */}
               <div className="bg-surface-container-lowest rounded-[2rem] p-6 sm:p-10 border border-outline-variant/20 shadow-lg space-y-8">
                 <div className="space-y-3">
                   <span className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-secondary-container text-on-secondary-container shadow-sm">
                     <span className="material-symbols-outlined text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>
                       {currentStepData.icon}
-=======
-              {/* Assessment Question Card */}
-              <div className="flex flex-col lg:flex-row gap-8 items-start justify-center">
-                <div
-                  className="w-full glass-panel rounded-[2rem] p-6 sm:p-10 card-shadow border border-outline-variant/30 space-y-8"
-                  style={{ maxWidth: '720px' }}
-                >
-                  <div className="text-center md:text-left space-y-3">
-                    <span className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-secondary-container text-on-secondary-container shadow-sm">
-                      <span className="material-symbols-outlined text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>
-                        {currentStepData.icon}
-                      </span>
->>>>>>> f3c8619a2db788a2776707a94a08c94eeb63c82c
                     </span>
                   </span>
                   <h1 className="text-2xl sm:text-3xl font-bold text-on-surface leading-snug">
@@ -264,30 +236,17 @@ function Assessment() {
             </>
           ) : (
             /* Results Screen */
-<<<<<<< HEAD
             <div className="bg-surface-container-lowest rounded-[2.5rem] p-8 md:p-14 shadow-2xl border border-outline-variant/20 text-center space-y-8 animate-fade-in">
               {/* Success Icon */}
-=======
-            <div
-              className="mx-auto glass-panel rounded-[2.5rem] p-8 md:p-14 shadow-2xl border border-outline-variant/30 text-center space-y-8"
-              style={{ maxWidth: '840px' }}
-            >
->>>>>>> f3c8619a2db788a2776707a94a08c94eeb63c82c
               <div className="w-20 h-20 rounded-full bg-emerald-500/10 text-emerald-600 flex items-center justify-center mx-auto shadow-lg">
                 <span className="material-symbols-outlined text-4xl" style={{ fontVariationSettings: "'FILL' 1" }}>
                   task_alt
                 </span>
               </div>
 
-<<<<<<< HEAD
               <div className="space-y-3 max-w-full mx-auto">
                 <span className="px-4 py-1.5 bg-emerald-500/10 text-emerald-600 rounded-full text-xs font-bold uppercase tracking-wider border border-emerald-500/20 inline-block">
                   {isRetake ? 'Profile Updated' : 'Profile Created'}
-=======
-              <div className="mx-auto space-y-3" style={{ maxWidth: '576px' }}>
-                <span className="px-4 py-1.5 bg-emerald-500/10 text-emerald-600 rounded-full text-xs font-bold uppercase tracking-wider border border-emerald-500/20">
-                  Assessment Saved to Profile
->>>>>>> f3c8619a2db788a2776707a94a08c94eeb63c82c
                 </span>
                 <h1 className="text-3xl md:text-4xl font-bold text-on-surface">
                   {finalScoreResult?.level}
