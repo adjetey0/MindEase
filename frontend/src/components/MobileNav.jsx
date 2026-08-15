@@ -8,7 +8,6 @@ function MobileNav() {
   const [notifOpen, setNotifOpen] = useState(false);
 
   const navItems = [
-    { name: 'Home', path: '/', icon: 'home' },
     { name: 'Dashboard', path: '/dashboard', icon: 'dashboard' },
     { name: 'Programs', path: '/programs', icon: 'apps' },
     { name: 'Chat', path: '/chat', icon: 'forum' },
@@ -72,9 +71,5 @@ function MobileNav() {
   );
 }
 
-<<<<<<< HEAD
 export default MobileNav;
 
-=======
-export default MobileNav;
->>>>>>> f3c8619a2db788a2776707a94a08c94eeb63c82c
